@@ -63,9 +63,16 @@ node build/index.js
 
 ### 配置（必须配置 AI 和 OSS）
 
-**⚠️ 重要提示：本工具必须同时配置通义千问 API 和阿里云 OSS 才能使用。**
+**⚠️ 重要提示：本工具需要配置 API 密钥才能使用。**
 
-在您的 MCP 客户端配置文件中添加以下配置：
+以下配置已在代码中**预设**：
+- OSS 存储桶：`aiagenttest`
+- OSS 区域：`oss-cn-beijing`
+- OSS 端点：`oss-cn-beijing.aliyuncs.com`
+- 通义千问模型：`qwen3-235b-a22b-thinking-2507`
+- API 地址：`https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
+
+**您只需提供 API 密钥：**
 
 ```json
 {
@@ -75,13 +82,9 @@ node build/index.js
       "command": "npx",
       "args": ["-y", "@jiushan93/markmap-mcp-server"],
       "env": {
-        "QWEN_API_KEY": "sk-your-dashscope-api-key",
+        "DASHSCOPE_API_KEY": "sk-your-dashscope-api-key",
         "OSS_ACCESS_KEY_ID": "your-oss-access-key-id",
-        "OSS_ACCESS_KEY_SECRET": "your-oss-access-key-secret",
-        "OSS_BUCKET": "your-oss-bucket-name",
-        "OSS_REGION": "oss-cn-beijing",
-        "OSS_ENDPOINT": "oss-cn-beijing.aliyuncs.com",
-        "MARKMAP_DIR": "/path/to/output/directory"
+        "OSS_ACCESS_KEY_SECRET": "your-oss-access-key-secret"
       }
     }
   }
@@ -90,28 +93,28 @@ node build/index.js
 
 > [!IMPORTANT]
 >
-> ### 环境变量说明（全部必需）
+> ### 环境变量说明
 >
-> **AI 配置（必需）：**
-> - `QWEN_API_KEY` 或 `DASHSCOPE_API_KEY`：阿里云 DashScope API 密钥（必需）
+> **必需的 API 密钥（必须配置）：**
+> - `DASHSCOPE_API_KEY` 或 `QWEN_API_KEY`：阿里云 DashScope API 密钥 **（必需）**
 >   - 获取地址：https://dashscope.console.aliyun.com/
->   - 用途：AI 智能生成 Markdown 内容
-> - `QWEN_MODEL`：模型名称（可选，默认：`qwen3-235b-a22b-thinking-2507`）
+> - `OSS_ACCESS_KEY_ID`：阿里云 OSS 访问密钥 ID **（必需）**
+> - `OSS_ACCESS_KEY_SECRET`：阿里云 OSS 访问密钥 Secret **（必需）**
 >
-> **阿里云 OSS 配置（必需）：**
-> - `OSS_ACCESS_KEY_ID`：阿里云 OSS 访问密钥 ID（必需）
-> - `OSS_ACCESS_KEY_SECRET`：阿里云 OSS 访问密钥 Secret（必需）
-> - `OSS_BUCKET`：OSS 存储桶名称（必需）
-> - `OSS_REGION`：OSS 区域，如 `oss-cn-beijing`（必需）
-> - `OSS_ENDPOINT`：OSS 访问域名（可选）
+> **预设配置（已在程序中硬编码）：**
+> - 模型：`qwen3-235b-a22b-thinking-2507`
+> - API 地址：`https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
+> - OSS 存储桶：`aiagenttest`
+> - OSS 区域：`oss-cn-beijing`
+> - OSS 端点：`oss-cn-beijing.aliyuncs.com`
 >
-> **本地存储（可选）：**
+> **可选配置：**
 > - `MARKMAP_DIR`：指定临时文件的输出目录（默认为系统临时目录）
 >
 > **⚠️ 重要说明：**
-> - 所有功能都**必须**同时配置 AI 和 OSS 才能使用
-> - 思维导图**仅**存储在 OSS 上，不会保留本地文件
-> - 生成的文件返回 OSS 签名 URL 供访问
+> - 只需要配置 API 密钥环境变量
+> - 其他设置（存储桶、区域、模型）已预先配置
+> - 思维导图存储在 OSS 并返回签名 URL（有效期 5 年）
 > - 本地临时文件在上传后会自动删除
 
 ## 可用工具

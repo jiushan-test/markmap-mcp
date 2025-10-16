@@ -63,9 +63,16 @@ node build/index.js
 
 ### Configuration (AI and OSS Required)
 
-**⚠️ Important: This tool requires both Qwen AI API and Aliyun OSS configuration to work.**
+**⚠️ Important: This tool requires API keys from environment variables to work.**
 
-Add the following configuration to your MCP client configuration file:
+The following configurations are **pre-configured** in the code:
+- OSS Bucket: `aiagenttest`
+- OSS Region: `oss-cn-beijing`
+- OSS Endpoint: `oss-cn-beijing.aliyuncs.com`
+- Qwen Model: `qwen3-235b-a22b-thinking-2507`
+- API URL: `https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
+
+**You only need to provide the API keys:**
 
 ```json
 {
@@ -75,13 +82,9 @@ Add the following configuration to your MCP client configuration file:
       "command": "npx",
       "args": ["-y", "@jiushan93/markmap-mcp-server"],
       "env": {
-        "QWEN_API_KEY": "sk-your-dashscope-api-key",
+        "DASHSCOPE_API_KEY": "sk-your-dashscope-api-key",
         "OSS_ACCESS_KEY_ID": "your-oss-access-key-id",
-        "OSS_ACCESS_KEY_SECRET": "your-oss-access-key-secret",
-        "OSS_BUCKET": "your-oss-bucket-name",
-        "OSS_REGION": "oss-cn-beijing",
-        "OSS_ENDPOINT": "oss-cn-beijing.aliyuncs.com",
-        "MARKMAP_DIR": "/path/to/output/directory"
+        "OSS_ACCESS_KEY_SECRET": "your-oss-access-key-secret"
       }
     }
   }
@@ -90,28 +93,28 @@ Add the following configuration to your MCP client configuration file:
 
 > [!IMPORTANT]
 >
-> ### Environment Variables (All Required)
+> ### Environment Variables
 >
-> **AI Configuration (Required):**
-> - `QWEN_API_KEY` or `DASHSCOPE_API_KEY`: Your Alibaba Cloud DashScope API key
+> **Required API Keys (Must be configured):**
+> - `DASHSCOPE_API_KEY` or `QWEN_API_KEY`: Your Alibaba Cloud DashScope API key **(Required)**
 >   - Get from: https://dashscope.console.aliyun.com/
->   - Required for: AI-powered markdown generation
-> - `QWEN_MODEL`: Model name (optional, default: `qwen3-235b-a22b-thinking-2507`)
+> - `OSS_ACCESS_KEY_ID`: Aliyun OSS Access Key ID **(Required)**
+> - `OSS_ACCESS_KEY_SECRET`: Aliyun OSS Access Key Secret **(Required)**
 >
-> **Aliyun OSS Configuration (Required):**
-> - `OSS_ACCESS_KEY_ID`: Aliyun OSS Access Key ID (Required)
-> - `OSS_ACCESS_KEY_SECRET`: Aliyun OSS Access Key Secret (Required)
-> - `OSS_BUCKET`: OSS bucket name (Required)
-> - `OSS_REGION`: OSS region, e.g., `oss-cn-beijing` (Required)
-> - `OSS_ENDPOINT`: OSS endpoint domain (Optional)
+> **Pre-configured Settings (Hard-coded in the application):**
+> - Model: `qwen3-235b-a22b-thinking-2507`
+> - API URL: `https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
+> - OSS Bucket: `aiagenttest`
+> - OSS Region: `oss-cn-beijing`
+> - OSS Endpoint: `oss-cn-beijing.aliyuncs.com`
 >
-> **Local Storage (Optional):**
+> **Optional Configuration:**
 > - `MARKMAP_DIR`: Specify the output directory for temporary files (defaults to system temp directory)
 >
 > **⚠️ Important Notes:**
-> - Both AI and OSS configurations are **required** for all features
-> - Mind maps are **only** stored in OSS, not locally
-> - Generated files return OSS signed URLs for access
+> - Only API keys need to be configured via environment variables
+> - All other settings (bucket, region, model) are pre-configured
+> - Mind maps are stored in OSS and return signed URLs (5-year validity)
 > - Temporary local files are automatically deleted after OSS upload
 
 ## Available Tools

@@ -176,30 +176,36 @@ export class OSSUploader {
 
 /**
  * 从环境变量创建OSS上传器实例
- * @returns OSS上传器实例，如果环境变量未配置则返回null
+ * @returns OSS上传器实例，如果密钥未配置则返回null
  */
 export function createOSSUploaderFromEnv(): OSSUploader | null {
-    const accessKeyId = process.env.OSS_ACCESS_KEY_ID;
-    const accessKeySecret = process.env.OSS_ACCESS_KEY_SECRET;
-    const bucket = process.env.OSS_BUCKET;
-    const region = process.env.OSS_REGION;
-    const endpoint = process.env.OSS_ENDPOINT;
+    // 密钥必须从环境变量获取
+    const OSS_ACCESS_KEY_ID = process.env.OSS_ACCESS_KEY_ID;
+    const OSS_ACCESS_KEY_SECRET = process.env.OSS_ACCESS_KEY_SECRET;
+    
+    // 其他配置硬编码
+    const OSS_ENDPOINT = "oss-cn-beijing.aliyuncs.com";
+    const OSS_BUCKET_NAME = "aiagenttest";
+    const OSS_REGION = "oss-cn-beijing";
 
-    // 检查必需的环境变量
-    if (!accessKeyId || !accessKeySecret || !bucket || !region) {
-        logger.warn("OSS环境变量未完全配置，将使用本地存储模式");
-        logger.warn("需要配置: OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET, OSS_BUCKET, OSS_REGION");
+    // 检查密钥是否已配置
+    if (!OSS_ACCESS_KEY_ID || !OSS_ACCESS_KEY_SECRET) {
+        logger.warn("OSS密钥未配置，将无法使用OSS上传功能");
+        logger.warn("请配置环境变量: OSS_ACCESS_KEY_ID 和 OSS_ACCESS_KEY_SECRET");
         return null;
     }
 
-    logger.info("使用环境变量初始化OSS上传器");
+    logger.info("初始化OSS上传器");
+    logger.info(`OSS Bucket: ${OSS_BUCKET_NAME}`);
+    logger.info(`OSS Region: ${OSS_REGION}`);
+    logger.info(`OSS Endpoint: ${OSS_ENDPOINT}`);
 
     return new OSSUploader({
-        accessKeyId,
-        accessKeySecret,
-        bucket,
-        region,
-        endpoint
+        accessKeyId: OSS_ACCESS_KEY_ID,
+        accessKeySecret: OSS_ACCESS_KEY_SECRET,
+        bucket: OSS_BUCKET_NAME,
+        region: OSS_REGION,
+        endpoint: OSS_ENDPOINT
     });
 }
 

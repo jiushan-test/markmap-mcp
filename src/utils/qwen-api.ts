@@ -178,24 +178,32 @@ export class QwenAPI {
 
 /**
  * 从环境变量创建Qwen API实例
- * @returns Qwen API实例，如果环境变量未配置则返回null
+ * @returns Qwen API实例，如果密钥未配置则返回null
  */
 export function createQwenAPIFromEnv(): QwenAPI | null {
-    const apiKey = process.env.QWEN_API_KEY || process.env.DASHSCOPE_API_KEY;
+    // API密钥必须从环境变量获取
+    const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY || process.env.QWEN_API_KEY;
+    
+    // 其他配置硬编码
+    const DASHSCOPE_MODEL = "qwen3-235b-a22b-thinking-2507";
+    const DASHSCOPE_ENDPOINT = "dashscope.aliyuncs.com";
+    const DASHSCOPE_API_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
 
-    // 检查必需的环境变量
-    if (!apiKey) {
+    // 检查密钥是否已配置
+    if (!DASHSCOPE_API_KEY) {
         logger.warn("Qwen API密钥未配置，将无法使用AI生成功能");
-        logger.warn("需要配置环境变量: QWEN_API_KEY 或 DASHSCOPE_API_KEY");
+        logger.warn("请配置环境变量: DASHSCOPE_API_KEY 或 QWEN_API_KEY");
         return null;
     }
 
-    logger.info("使用环境变量初始化Qwen API客户端");
+    logger.info("初始化Qwen API客户端");
+    logger.info(`使用模型: ${DASHSCOPE_MODEL}`);
+    logger.info(`API端点: ${DASHSCOPE_ENDPOINT}`);
 
     return new QwenAPI({
-        apiKey,
-        model: process.env.QWEN_MODEL || "qwen3-235b-a22b-thinking-2507",
-        endpoint: process.env.QWEN_ENDPOINT || "dashscope.aliyuncs.com"
+        apiKey: DASHSCOPE_API_KEY,
+        model: DASHSCOPE_MODEL,
+        endpoint: DASHSCOPE_ENDPOINT
     });
 }
 
