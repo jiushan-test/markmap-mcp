@@ -191,8 +191,8 @@ export async function createMarkmap(
         // Export as PNG image
         const pngBtn = document.createElement('button');
         pngBtn.className = 'mm-export-btn png-export';
-        pngBtn.innerHTML = 'Export PNG';
-        pngBtn.title = 'Export as PNG image';
+        pngBtn.innerHTML = '导出 PNG';
+        pngBtn.title = '导出为PNG图片';
         pngBtn.onclick = () => {
           exportToImage('png');
         };
@@ -201,8 +201,8 @@ export async function createMarkmap(
         // Export as JPG image
         const jpgBtn = document.createElement('button');
         jpgBtn.className = 'mm-export-btn jpg-export';
-        jpgBtn.innerHTML = 'Export JPG';
-        jpgBtn.title = 'Export as JPG image';
+        jpgBtn.innerHTML = '导出 JPG';
+        jpgBtn.title = '导出为JPG图片';
         jpgBtn.onclick = () => {
           exportToImage('jpeg');
         };
@@ -211,36 +211,36 @@ export async function createMarkmap(
         // Export as SVG image
         const svgBtn = document.createElement('button');
         svgBtn.className = 'mm-export-btn svg-export';
-        svgBtn.innerHTML = 'Export SVG';
-        svgBtn.title = 'Export as SVG image';
+        svgBtn.innerHTML = '导出 SVG';
+        svgBtn.title = '导出为SVG矢量图';
         svgBtn.onclick = () => {
           exportToImage('svg');
         };
         exportToolbar.appendChild(svgBtn);
 
-        // Export as XMind (FreeMind format)
-        const xmindBtn = document.createElement('button');
-        xmindBtn.className = 'mm-export-btn xmind-export';
-        xmindBtn.innerHTML = 'Export XMind';
-        xmindBtn.title = 'Export as XMind-compatible format (.mm)';
-        xmindBtn.style.backgroundColor = '#ff6b35';
-        xmindBtn.onclick = exportToXMind;
-        exportToolbar.appendChild(xmindBtn);
+        // Export as FreeMind .mm format
+        const mmBtn = document.createElement('button');
+        mmBtn.className = 'mm-export-btn mm-export';
+        mmBtn.innerHTML = '导出 .mm 文件';
+        mmBtn.title = '导出为 .mm 文件（可用XMind、FreeMind等软件打开）';
+        mmBtn.style.backgroundColor = '#ff6b35';
+        mmBtn.onclick = exportToFreeMind;
+        exportToolbar.appendChild(mmBtn);
 
         // Copy original Markdown button
         const copyBtn = document.createElement('button');
         copyBtn.className = 'mm-export-btn mm-copy-btn copy-markdown';
-        copyBtn.innerHTML = 'Copy Markdown';
-        copyBtn.title = 'Copy original Markdown content';
+        copyBtn.innerHTML = '复制 Markdown';
+        copyBtn.title = '复制原始Markdown内容';
         copyBtn.onclick = copyOriginalMarkdown;
         exportToolbar.appendChild(copyBtn);
 
-        // Function to export to XMind-compatible format (FreeMind .mm)
-        function exportToXMind() {
+        // Function to export to FreeMind .mm format
+        function exportToFreeMind() {
           try {
             const markdownElement = document.getElementById('original-markdown');
             if (!markdownElement) {
-              throw new Error('Original Markdown content not found');
+              throw new Error('未找到原始Markdown内容');
             }
             
             const markdownContent = markdownElement.value;
@@ -259,76 +259,107 @@ export async function createMarkmap(
             URL.revokeObjectURL(url);
             
             // Show success message
-            const originalText = xmindBtn.innerHTML;
-            xmindBtn.innerHTML = '✓ Exported';
-            xmindBtn.style.backgroundColor = '#2ecc71';
+            const originalText = mmBtn.innerHTML;
+            mmBtn.innerHTML = '✓ 已导出';
+            mmBtn.style.backgroundColor = '#2ecc71';
             setTimeout(() => {
-              xmindBtn.innerHTML = originalText;
-              xmindBtn.style.backgroundColor = '#ff6b35';
+              mmBtn.innerHTML = originalText;
+              mmBtn.style.backgroundColor = '#ff6b35';
             }, 2000);
           } catch (e) {
-            console.error('Error exporting XMind:', e);
-            alert('XMind export failed: ' + e.message);
+            console.error('导出.mm文件错误:', e);
+            alert('导出失败：' + e.message);
           }
         }
 
         // Convert Markdown to FreeMind XML format
         function convertMarkdownToFreeMind(markdown) {
-          const lines = markdown.split('\\n').filter(line => line.trim());
+          const lines = markdown.split('\\n');
           let xml = '<?xml version="1.0" encoding="UTF-8"?>\\n';
           xml += '<map version="1.0.1">\\n';
           
-          const stack = [{ level: 0, element: null }];
+          // 栈用于跟踪当前层级，初始化为根层级
+          const stack = [{ level: 0 }];
           let nodeId = 0;
+          let rootNodeAdded = false;
           
           lines.forEach(line => {
             const trimmed = line.trim();
             if (!trimmed) return;
             
-            // Detect heading level
             let level = 0;
             let text = trimmed;
             
+            // 检测标题层级 (# ## ###)
             if (trimmed.startsWith('#')) {
               const match = trimmed.match(/^(#+)\\s+(.+)$/);
               if (match) {
                 level = match[1].length;
                 text = match[2];
+              } else {
+                return; // 无效的标题格式
               }
-            } else if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
-              // List item - count leading spaces for level
+            } 
+            // 检测列表项 (- 或 *)
+            else if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
+              // 计算缩进层级
               const leadingSpaces = line.match(/^\\s*/)[0].length;
-              level = Math.floor(leadingSpaces / 2) + 2; // Start from level 2 for list items
+              const indent = Math.floor(leadingSpaces / 2);
+              
+              // 列表项的层级 = 其父标题层级 + 1 + 缩进层级
+              // 找到最近的标题层级
+              let parentHeadingLevel = 0;
+              for (let i = stack.length - 1; i >= 0; i--) {
+                if (stack[i].level > 0) {
+                  parentHeadingLevel = stack[i].level;
+                  break;
+                }
+              }
+              level = parentHeadingLevel + 1 + indent;
               text = trimmed.substring(1).trim();
+            } else {
+              // 忽略不是标题或列表项的行
+              return;
             }
             
-            // Clean text
+            // 清理文本中的XML特殊字符
             text = text.replace(/[<>&"']/g, (char) => {
-              const entities = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' };
+              const entities = { 
+                '<': '&lt;', 
+                '>': '&gt;', 
+                '&': '&amp;', 
+                '"': '&quot;', 
+                "'": '&apos;' 
+              };
               return entities[char];
             });
             
-            // Close previous nodes if needed
+            // 关闭比当前层级高或相等的节点
             while (stack.length > 1 && stack[stack.length - 1].level >= level) {
-              xml += '</node>\\n';
+              const indent = '  '.repeat(stack.length - 1);
+              xml += \`\${indent}</node>\\n\`;
               stack.pop();
             }
             
-            // Add new node
+            // 添加新节点
             const indent = '  '.repeat(stack.length);
-            if (level === 1) {
-              // Root node
+            
+            if (!rootNodeAdded && level === 1) {
+              // 第一个一级标题作为根节点
               xml += \`\${indent}<node ID="ID_\${nodeId++}" TEXT="\${text}">\\n\`;
+              rootNodeAdded = true;
             } else {
+              // 其他节点
               xml += \`\${indent}<node ID="ID_\${nodeId++}" TEXT="\${text}">\\n\`;
             }
             
-            stack.push({ level, element: text });
+            stack.push({ level });
           });
           
-          // Close remaining nodes
+          // 关闭所有未关闭的节点
           while (stack.length > 1) {
-            xml += '</node>\\n';
+            const indent = '  '.repeat(stack.length - 1);
+            xml += \`\${indent}</node>\\n\`;
             stack.pop();
           }
           
@@ -341,7 +372,7 @@ export async function createMarkmap(
           try {
             const markdownElement = document.getElementById('original-markdown');
             if (!markdownElement) {
-              throw new Error('Original Markdown content not found');
+              throw new Error('未找到原始Markdown内容');
             }
             
             const markdownContent = markdownElement.value;
@@ -350,7 +381,7 @@ export async function createMarkmap(
             navigator.clipboard.writeText(markdownContent)
               .then(() => {
                 const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '✓ Copied';
+                copyBtn.innerHTML = '✓ 已复制';
                 copyBtn.style.backgroundColor = '#2ecc71';
                 
                 setTimeout(() => {
@@ -359,12 +390,12 @@ export async function createMarkmap(
                 }, 2000);
               })
               .catch(err => {
-                console.error('Copy failed:', err);
-                alert('Failed to copy to clipboard, please check browser permissions');
+                console.error('复制失败:', err);
+                alert('复制失败，请检查浏览器权限');
               });
           } catch (e) {
-            console.error('Error copying Markdown:', e);
-            alert('Unable to copy Markdown: ' + e.message);
+            console.error('复制Markdown错误:', e);
+            alert('无法复制Markdown：' + e.message);
           }
         }
 
@@ -374,7 +405,7 @@ export async function createMarkmap(
             const node = window.mm.svg._groups[0][0];
             
             if (!node) {
-              throw new Error('Cannot find mind map SVG element');
+              throw new Error('找不到思维导图SVG元素');
             }
 
             window.mm.fit().then(() => {
@@ -399,15 +430,15 @@ export async function createMarkmap(
                   link.href = dataUrl;
                   link.click();
                 })
-                .catch((err) => console.error("Export failed:", err));
+                .catch((err) => console.error("导出失败:", err));
             })
             .catch((err) => {
                 throw err;
             });
               
           } catch (e) {
-            console.error('Error exporting image:', e);
-            alert('Image export failed: ' + e.message);
+            console.error('导出图片错误:', e);
+            alert('图片导出失败：' + e.message);
           }
         }
       })();

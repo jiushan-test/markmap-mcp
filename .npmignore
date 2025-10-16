@@ -19,9 +19,11 @@ prettier.config.js
 
 # Test files
 test-qwen-api.js
+test-xmind-export.js
 test_config.json
 *.test.ts
 *.test.js
+test-*.example.js
 
 # Documentation (keep only essential)
 TECHNICAL_DOCUMENTATION_zh.md

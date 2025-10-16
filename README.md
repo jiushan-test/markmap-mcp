@@ -168,13 +168,13 @@ On failure, returns error details:
 
 **Available Export Formats:**
 
-The generated mind map HTML includes buttons to export in multiple formats:
+The generated mind map HTML includes buttons (in Chinese) to export in multiple formats:
 
-- 📸 **PNG**: Export as PNG image
-- 📸 **JPG**: Export as JPG image
-- 📸 **SVG**: Export as SVG vector image
-- 🧠 **XMind**: Export as XMind-compatible format (.mm file) - Can be opened in XMind, FreeMind, Freeplane
-- 📋 **Copy Markdown**: Copy the original Markdown content
+- 📸 **导出 PNG**: Export as PNG image
+- 📸 **导出 JPG**: Export as JPG image
+- 📸 **导出 SVG**: Export as SVG vector image
+- 🧠 **导出 .mm 文件**: Export as FreeMind format (.mm file) - Can be opened in XMind, FreeMind, Freeplane
+- 📋 **复制 Markdown**: Copy the original Markdown content
 
 ## License
 

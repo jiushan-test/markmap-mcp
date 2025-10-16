@@ -11,20 +11,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ New Features
 
-- **Export to XMind**: Added "Export XMind" button to export mind maps to XMind-compatible format (.mm file)
-  - Uses FreeMind XML format which is compatible with XMind and other mind mapping tools
-  - Converts Markdown structure to hierarchical mind map nodes
-  - Downloads as `.mm` file that can be opened in XMind, FreeMind, Freeplane, etc.
-  - Button appears in orange color for visual distinction
-  - Shows success confirmation after export
+- **导出 .mm 文件**: 新增"导出 .mm 文件"按钮，可导出为FreeMind格式（.mm文件）
+  - 使用FreeMind XML格式，兼容XMind、FreeMind、Freeplane等思维导图软件
+  - 将Markdown结构转换为层级化的思维导图节点
+  - 下载的`.mm`文件可在多种思维导图工具中打开
+  - 按钮为橙色，视觉上易于区分
+  - 导出成功后显示确认提示
+
+### 🌐 Internationalization
+
+- **所有按钮改为中文**: 所有导出和操作按钮文本改为中文
+  - "导出 PNG"、"导出 JPG"、"导出 SVG"
+  - "导出 .mm 文件"（原"Export XMind"）
+  - "复制 Markdown"（原"Copy Markdown"）
+  - 所有提示信息和错误消息也改为中文
 
 ### 🔧 Technical Details
 
-- Added `exportToXMind()` function to convert and download mind map data
+- Added `exportToFreeMind()` function to convert and download mind map data
 - Added `convertMarkdownToFreeMind()` function to parse Markdown into FreeMind XML format
 - Supports nested headings (#, ##, ###) and list items (-, \*)
 - Properly escapes XML special characters for data safety
-- Updated package description to include XMind export support
+- Localized all UI text and error messages to Chinese
+- Updated package description to include .mm file export support
 
 ---
 

@@ -168,13 +168,13 @@ https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python编程基础知识
 
 **可用的导出格式：**
 
-生成的思维导图HTML包含多种导出格式按钮：
+生成的思维导图HTML包含多种导出格式按钮（中文界面）：
 
-- 📸 **PNG**：导出为PNG图片
-- 📸 **JPG**：导出为JPG图片
-- 📸 **SVG**：导出为SVG矢量图
-- 🧠 **XMind**：导出为XMind兼容格式（.mm文件）- 可在XMind、FreeMind、Freeplane中打开
-- 📋 **复制Markdown**：复制原始Markdown内容
+- 📸 **导出 PNG**：导出为PNG图片
+- 📸 **导出 JPG**：导出为JPG图片
+- 📸 **导出 SVG**：导出为SVG矢量图
+- 🧠 **导出 .mm 文件**：导出为FreeMind格式（.mm文件）- 可在XMind、FreeMind、Freeplane中打开
+- 📋 **复制 Markdown**：复制原始Markdown内容
 
 ## 许可证
 
