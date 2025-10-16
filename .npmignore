@@ -1,0 +1,62 @@
+# Source files
+src/
+tests/
+
+# Configuration files
+.eslintrc*
+.prettierrc*
+tsconfig.json
+vitest.config.ts
+eslint.config.js
+prettier.config.js
+
+# Development files
+.husky/
+.cursor/
+.vscode/
+*.log
+*.lock
+
+# Test files
+test-qwen-api.js
+test_config.json
+*.test.ts
+*.test.js
+
+# Documentation (keep only essential)
+TECHNICAL_DOCUMENTATION_zh.md
+TEST_GUIDE.md
+FINAL_TEST_REPORT.md
+PROCESS_FLOW.md
+ENV_CONFIG.md
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Other
+node_modules/
+coverage/
+.DS_Store
+*.swp
+*.swo
+*~
+.env
+.env.*
+output/
+temp/
+
+# Keep these files
+!README.md
+!README_zh-CN.md
+!README_AI_FEATURE.md
+!QUICK_START_GUIDE.md
+!LICENSE
+!CHANGES_SUMMARY.md
+!claude_desktop_config.example.json
+

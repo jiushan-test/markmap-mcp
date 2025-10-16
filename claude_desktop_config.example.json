@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "markmap": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["D:\\agent\\MCP\\markmap-mcp-server-main\\build\\index.js"],
+      "env": {
+        "QWEN_API_KEY": "sk-your-dashscope-api-key-here",
+        "OSS_ACCESS_KEY_ID": "your-oss-access-key-id",
+        "OSS_ACCESS_KEY_SECRET": "your-oss-access-key-secret",
+        "OSS_BUCKET": "your-bucket-name",
+        "OSS_REGION": "oss-cn-beijing",
+        "OSS_ENDPOINT": "oss-cn-beijing.aliyuncs.com",
+        "MARKMAP_DIR": "D:\\agent\\MCP\\markmap-mcp-server-main\\output"
+      }
+    }
+  }
+}
