@@ -218,6 +218,15 @@ export async function createMarkmap(
         };
         exportToolbar.appendChild(svgBtn);
 
+        // Export as XMind (FreeMind format)
+        const xmindBtn = document.createElement('button');
+        xmindBtn.className = 'mm-export-btn xmind-export';
+        xmindBtn.innerHTML = 'Export XMind';
+        xmindBtn.title = 'Export as XMind-compatible format (.mm)';
+        xmindBtn.style.backgroundColor = '#ff6b35';
+        xmindBtn.onclick = exportToXMind;
+        exportToolbar.appendChild(xmindBtn);
+
         // Copy original Markdown button
         const copyBtn = document.createElement('button');
         copyBtn.className = 'mm-export-btn mm-copy-btn copy-markdown';
@@ -225,6 +234,107 @@ export async function createMarkmap(
         copyBtn.title = 'Copy original Markdown content';
         copyBtn.onclick = copyOriginalMarkdown;
         exportToolbar.appendChild(copyBtn);
+
+        // Function to export to XMind-compatible format (FreeMind .mm)
+        function exportToXMind() {
+          try {
+            const markdownElement = document.getElementById('original-markdown');
+            if (!markdownElement) {
+              throw new Error('Original Markdown content not found');
+            }
+            
+            const markdownContent = markdownElement.value;
+            
+            // Convert Markdown to FreeMind XML
+            const freemindXml = convertMarkdownToFreeMind(markdownContent);
+            
+            // Create download link
+            const blob = new Blob([freemindXml], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const timestamp = new Date().toISOString().slice(0, 10);
+            link.download = \`markmap-\${timestamp}.mm\`;
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            // Show success message
+            const originalText = xmindBtn.innerHTML;
+            xmindBtn.innerHTML = '✓ Exported';
+            xmindBtn.style.backgroundColor = '#2ecc71';
+            setTimeout(() => {
+              xmindBtn.innerHTML = originalText;
+              xmindBtn.style.backgroundColor = '#ff6b35';
+            }, 2000);
+          } catch (e) {
+            console.error('Error exporting XMind:', e);
+            alert('XMind export failed: ' + e.message);
+          }
+        }
+
+        // Convert Markdown to FreeMind XML format
+        function convertMarkdownToFreeMind(markdown) {
+          const lines = markdown.split('\\n').filter(line => line.trim());
+          let xml = '<?xml version="1.0" encoding="UTF-8"?>\\n';
+          xml += '<map version="1.0.1">\\n';
+          
+          const stack = [{ level: 0, element: null }];
+          let nodeId = 0;
+          
+          lines.forEach(line => {
+            const trimmed = line.trim();
+            if (!trimmed) return;
+            
+            // Detect heading level
+            let level = 0;
+            let text = trimmed;
+            
+            if (trimmed.startsWith('#')) {
+              const match = trimmed.match(/^(#+)\\s+(.+)$/);
+              if (match) {
+                level = match[1].length;
+                text = match[2];
+              }
+            } else if (trimmed.startsWith('-') || trimmed.startsWith('*')) {
+              // List item - count leading spaces for level
+              const leadingSpaces = line.match(/^\\s*/)[0].length;
+              level = Math.floor(leadingSpaces / 2) + 2; // Start from level 2 for list items
+              text = trimmed.substring(1).trim();
+            }
+            
+            // Clean text
+            text = text.replace(/[<>&"']/g, (char) => {
+              const entities = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' };
+              return entities[char];
+            });
+            
+            // Close previous nodes if needed
+            while (stack.length > 1 && stack[stack.length - 1].level >= level) {
+              xml += '</node>\\n';
+              stack.pop();
+            }
+            
+            // Add new node
+            const indent = '  '.repeat(stack.length);
+            if (level === 1) {
+              // Root node
+              xml += \`\${indent}<node ID="ID_\${nodeId++}" TEXT="\${text}">\\n\`;
+            } else {
+              xml += \`\${indent}<node ID="ID_\${nodeId++}" TEXT="\${text}">\\n\`;
+            }
+            
+            stack.push({ level, element: text });
+          });
+          
+          // Close remaining nodes
+          while (stack.length > 1) {
+            xml += '</node>\\n';
+            stack.pop();
+          }
+          
+          xml += '</map>';
+          return xml;
+        }
 
         // Function to copy original Markdown content
         function copyOriginalMarkdown() {

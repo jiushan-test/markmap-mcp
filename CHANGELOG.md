@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.6] - 2025-10-16
+
+### ✨ New Features
+
+- **Export to XMind**: Added "Export XMind" button to export mind maps to XMind-compatible format (.mm file)
+  - Uses FreeMind XML format which is compatible with XMind and other mind mapping tools
+  - Converts Markdown structure to hierarchical mind map nodes
+  - Downloads as `.mm` file that can be opened in XMind, FreeMind, Freeplane, etc.
+  - Button appears in orange color for visual distinction
+  - Shows success confirmation after export
+
+### 🔧 Technical Details
+
+- Added `exportToXMind()` function to convert and download mind map data
+- Added `convertMarkdownToFreeMind()` function to parse Markdown into FreeMind XML format
+- Supports nested headings (#, ##, ###) and list items (-, \*)
+- Properly escapes XML special characters for data safety
+- Updated package description to include XMind export support
+
+---
+
 ## [0.2.5] - 2025-10-16
 
 ### 🐛 Bug Fixes

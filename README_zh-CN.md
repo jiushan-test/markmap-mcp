@@ -19,7 +19,7 @@ Markmap MCP Server 基于 [模型上下文协议 (MCP)](https://modelcontextprot
 - 🌠 **Markdown 转思维导图**：将 Markdown 文本转换为交互式思维导图
 - 🔗 **URL 下载支持**：支持从 URL 直接下载 Markdown 文件并转换
 - ☁️ **阿里云 OSS 集成**：自动上传生成的思维导图到阿里云对象存储，返回在线访问链接
-- 🖼️ **多格式导出**：支持导出为 PNG、JPG 和 SVG 格式的图片
+- 🖼️ **多格式导出**：支持导出为 PNG、JPG、SVG 格式的图片，以及 XMind 兼容格式
 - 🔄 **交互式操作**：支持缩放、展开/折叠节点等交互功能
 - 📋 **Markdown 复制**：一键复制原始 Markdown 内容
 - 🧹 **自动清理**：OSS 上传后自动删除本地临时文件
@@ -165,6 +165,16 @@ https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python编程基础知识
 
 - ✅ 通义千问 API 配置（必需）
 - ✅ OSS 配置（必需）
+
+**可用的导出格式：**
+
+生成的思维导图HTML包含多种导出格式按钮：
+
+- 📸 **PNG**：导出为PNG图片
+- 📸 **JPG**：导出为JPG图片
+- 📸 **SVG**：导出为SVG矢量图
+- 🧠 **XMind**：导出为XMind兼容格式（.mm文件）- 可在XMind、FreeMind、Freeplane中打开
+- 📋 **复制Markdown**：复制原始Markdown内容
 
 ## 许可证
 

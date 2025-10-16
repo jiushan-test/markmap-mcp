@@ -19,7 +19,7 @@ Markmap MCP Server is based on the [Model Context Protocol (MCP)](https://modelc
 - 🌠 **Markdown to Mind Map**: Convert Markdown text to interactive mind maps
 - 🔗 **URL Download Support**: Download Markdown files directly from URLs for conversion
 - ☁️ **Aliyun OSS Integration**: Automatically upload generated mind maps to Aliyun Object Storage and get online access links
-- 🖼️ **Multi-format Export**: Support for exporting as PNG, JPG, and SVG images
+- 🖼️ **Multi-format Export**: Support for exporting as PNG, JPG, SVG images, and XMind-compatible format
 - 🔄 **Interactive Operations**: Support for zooming, expanding/collapsing nodes, and other interactive features
 - 📋 **Markdown Copy**: One-click copy of the original Markdown content
 - 🧹 **Auto Cleanup**: Automatically delete local temporary files after OSS upload
@@ -165,6 +165,16 @@ On failure, returns error details:
 
 - ✅ Qwen API configuration (required)
 - ✅ OSS configuration (required)
+
+**Available Export Formats:**
+
+The generated mind map HTML includes buttons to export in multiple formats:
+
+- 📸 **PNG**: Export as PNG image
+- 📸 **JPG**: Export as JPG image
+- 📸 **SVG**: Export as SVG vector image
+- 🧠 **XMind**: Export as XMind-compatible format (.mm file) - Can be opened in XMind, FreeMind, Freeplane
+- 📋 **Copy Markdown**: Copy the original Markdown content
 
 ## License
 
