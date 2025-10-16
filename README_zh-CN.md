@@ -66,6 +66,7 @@ node build/index.js
 **⚠️ 重要提示：本工具需要配置 API 密钥才能使用。**
 
 以下配置已在代码中**预设**：
+
 - OSS 存储桶：`aiagenttest`
 - OSS 区域：`oss-cn-beijing`
 - OSS 端点：`oss-cn-beijing.aliyuncs.com`
@@ -96,12 +97,14 @@ node build/index.js
 > ### 环境变量说明
 >
 > **必需的 API 密钥（必须配置）：**
+>
 > - `DASHSCOPE_API_KEY` 或 `QWEN_API_KEY`：阿里云 DashScope API 密钥 **（必需）**
 >   - 获取地址：https://dashscope.console.aliyun.com/
 > - `OSS_ACCESS_KEY_ID`：阿里云 OSS 访问密钥 ID **（必需）**
 > - `OSS_ACCESS_KEY_SECRET`：阿里云 OSS 访问密钥 Secret **（必需）**
 >
 > **预设配置（已在程序中硬编码）：**
+>
 > - 模型：`qwen3-235b-a22b-thinking-2507`
 > - API 地址：`https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
 > - OSS 存储桶：`aiagenttest`
@@ -109,9 +112,11 @@ node build/index.js
 > - OSS 端点：`oss-cn-beijing.aliyuncs.com`
 >
 > **可选配置：**
+>
 > - `MARKMAP_DIR`：指定临时文件的输出目录（默认为系统临时目录）
 >
 > **⚠️ 重要说明：**
+>
 > - 只需要配置 API 密钥环境变量
 > - 其他设置（存储桶、区域、模型）已预先配置
 > - 思维导图存储在 OSS 并返回签名 URL（有效期 5 年）
@@ -119,7 +124,7 @@ node build/index.js
 
 ## 可用工具
 
-### text-to-mindmap（v0.2.0 新增）
+### text-to-mindmap
 
 **使用 AI 将文本描述转换为交互式思维导图。**
 
@@ -151,52 +156,9 @@ node build/index.js
 ```
 
 **配置要求：**
+
 - ✅ 通义千问 API 配置（必需）
 - ✅ OSS 配置（必需）
-
----
-
-### markdown-to-mindmap
-
-**将 Markdown 文本或 URL 转换为交互式思维导图。**
-
-支持从 URL 下载 Markdown 内容，并自动上传到阿里云 OSS。
-
-**参数：**
-
-- `markdown`：要转换的 Markdown 内容（可选字符串，与 `url` 二选一）
-- `url`：要下载的 Markdown 文件的 URL 地址（可选字符串，与 `markdown` 二选一）
-
-**使用示例：**
-
-```javascript
-// 从 Markdown 文本生成
-{
-  "markdown": "# 我的思维导图\n- 主题1\n  - 子主题1.1\n- 主题2"
-}
-
-// 从 URL 下载并生成
-{
-  "url": "https://raw.githubusercontent.com/username/repo/main/README.md"
-}
-```
-
-**返回值：**
-
-```json
-{
-  "success": true,
-  "filePath": "https://your-bucket.oss-cn-beijing.aliyuncs.com/markmap/xxx.html",
-  "uploadedToOSS": true,
-  "ossUrl": "https://your-bucket.oss-cn-beijing.aliyuncs.com/markmap/xxx.html?...",
-  "message": "思维导图已生成并成功上传到阿里云OSS",
-  "source": "https://example.com/readme.md"
-}
-```
-
-**配置要求：**
-- ✅ OSS 配置（必需）
-- ❌ AI 配置（此工具不需要）
 
 ## 许可证
 

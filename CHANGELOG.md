@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.3] - 2025-10-16
+
+### ⚡ Breaking Changes
+
+- **Removed `markdown-to-mindmap` tool**: This tool has been removed. The server now only provides the `text-to-mindmap` tool which uses AI to generate mind maps from plain text descriptions.
+
+### 🔧 Changes
+
+- **Simplified tool set**: Only one tool (`text-to-mindmap`) is now available, making the API simpler and more focused on AI-powered generation.
+- **Code cleanup**: Removed HTTP downloader dependency as it's no longer needed.
+- **Updated documentation**: Both English and Chinese README files updated to reflect the single tool.
+
+### 📝 Migration Guide
+
+If you were using `markdown-to-mindmap`:
+
+- **For plain text**: Use `text-to-mindmap` instead - it will use AI to structure your content
+- **For Markdown content**: Convert your markdown to plain text description and use `text-to-mindmap`
+- **For URLs**: Download the content first, then use `text-to-mindmap`
+
+---
+
 ## [0.2.2] - 2025-10-16
 
 ### 🎯 Simplified Configuration

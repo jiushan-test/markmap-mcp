@@ -66,6 +66,7 @@ node build/index.js
 **⚠️ Important: This tool requires API keys from environment variables to work.**
 
 The following configurations are **pre-configured** in the code:
+
 - OSS Bucket: `aiagenttest`
 - OSS Region: `oss-cn-beijing`
 - OSS Endpoint: `oss-cn-beijing.aliyuncs.com`
@@ -96,12 +97,14 @@ The following configurations are **pre-configured** in the code:
 > ### Environment Variables
 >
 > **Required API Keys (Must be configured):**
+>
 > - `DASHSCOPE_API_KEY` or `QWEN_API_KEY`: Your Alibaba Cloud DashScope API key **(Required)**
 >   - Get from: https://dashscope.console.aliyun.com/
 > - `OSS_ACCESS_KEY_ID`: Aliyun OSS Access Key ID **(Required)**
 > - `OSS_ACCESS_KEY_SECRET`: Aliyun OSS Access Key Secret **(Required)**
 >
 > **Pre-configured Settings (Hard-coded in the application):**
+>
 > - Model: `qwen3-235b-a22b-thinking-2507`
 > - API URL: `https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
 > - OSS Bucket: `aiagenttest`
@@ -109,17 +112,19 @@ The following configurations are **pre-configured** in the code:
 > - OSS Endpoint: `oss-cn-beijing.aliyuncs.com`
 >
 > **Optional Configuration:**
+>
 > - `MARKMAP_DIR`: Specify the output directory for temporary files (defaults to system temp directory)
 >
 > **⚠️ Important Notes:**
+>
 > - Only API keys need to be configured via environment variables
 > - All other settings (bucket, region, model) are pre-configured
 > - Mind maps are stored in OSS and return signed URLs (5-year validity)
 > - Temporary local files are automatically deleted after OSS upload
 
-## Available Tools
+## Available Tool
 
-### text-to-mindmap (NEW in v0.2.0)
+### text-to-mindmap
 
 **Convert plain text descriptions into interactive mind maps using AI.**
 
@@ -151,52 +156,9 @@ The text will be processed by Qwen AI model to generate structured Markdown, the
 ```
 
 **Requirements:**
+
 - ✅ Qwen API configuration (required)
 - ✅ OSS configuration (required)
-
----
-
-### markdown-to-mindmap
-
-**Convert Markdown text or URL into an interactive mind map.**
-
-Supports downloading Markdown content from URLs and automatic upload to Aliyun OSS.
-
-**Parameters:**
-
-- `markdown`: The Markdown content to convert (optional string, mutually exclusive with `url`)
-- `url`: URL to download Markdown content from (optional string, mutually exclusive with `markdown`)
-
-**Example:**
-
-```javascript
-// From Markdown text
-{
-  "markdown": "# My Mind Map\n- Topic 1\n  - Subtopic 1.1\n- Topic 2"
-}
-
-// From URL
-{
-  "url": "https://raw.githubusercontent.com/username/repo/main/README.md"
-}
-```
-
-**Return Value:**
-
-```json
-{
-  "success": true,
-  "filePath": "https://your-bucket.oss-cn-beijing.aliyuncs.com/markmap/xxx.html",
-  "uploadedToOSS": true,
-  "ossUrl": "https://your-bucket.oss-cn-beijing.aliyuncs.com/markmap/xxx.html?...",
-  "message": "Mind map generated and uploaded to Aliyun OSS",
-  "source": "https://example.com/readme.md"
-}
-```
-
-**Requirements:**
-- ✅ OSS configuration (required)
-- ❌ AI configuration (not required for this tool)
 
 ## License
 
