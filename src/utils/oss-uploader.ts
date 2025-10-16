@@ -1,5 +1,5 @@
 import OSS from "ali-oss";
-import { readFileSync } from "fs";
+import { basename } from "path";
 import logger from "./logger.js";
 
 /**
@@ -63,23 +63,19 @@ export class OSSUploader {
         ossFileName?: string
     ): Promise<OSSUploadResult> {
         try {
-            // 如果未指定OSS文件名，使用本地文件的基础名
+            // 如果未指定OSS文件名，使用本地文件的基础名（兼容Windows和Unix路径）
             const objectName =
                 ossFileName ||
-                `markmap/${Date.now()}-${localFilePath.split("/").pop()}`;
+                `markmap/${Date.now()}-${basename(localFilePath)}`;
 
             logger.info(`开始上传文件到OSS: ${objectName}`);
 
             // 执行上传操作
-            const result = await this.client.put(
-                objectName,
-                localFilePath,
-                {
-                    headers: {
-                        'Content-Type': 'text/html; charset=utf-8'  // 设置正确的内容类型
-                    }
+            const result = await this.client.put(objectName, localFilePath, {
+                headers: {
+                    "Content-Type": "text/html; charset=utf-8" // 设置正确的内容类型
                 }
-            );
+            });
 
             logger.info(`文件上传成功: ${result.url}`);
 
@@ -88,7 +84,7 @@ export class OSSUploader {
             logger.info(`已生成签名URL（有效期5年）`);
 
             return {
-                url: signedUrl,  // 返回签名URL作为主要访问地址
+                url: signedUrl, // 返回签名URL作为主要访问地址
                 name: result.name,
                 signedUrl: signedUrl
             };
@@ -116,7 +112,7 @@ export class OSSUploader {
             // 上传Buffer数据
             const result = await this.client.put(objectName, buffer, {
                 headers: {
-                    'Content-Type': 'text/html; charset=utf-8'  // 设置正确的内容类型
+                    "Content-Type": "text/html; charset=utf-8" // 设置正确的内容类型
                 }
             });
 
@@ -127,7 +123,7 @@ export class OSSUploader {
             logger.info(`已生成签名URL（有效期5年）`);
 
             return {
-                url: signedUrl,  // 返回签名URL作为主要访问地址
+                url: signedUrl, // 返回签名URL作为主要访问地址
                 name: result.name,
                 signedUrl: signedUrl
             };
@@ -149,9 +145,9 @@ export class OSSUploader {
             // expires: URL过期时间（秒）
             const signedUrl = this.client.signatureUrl(objectName, {
                 expires: expires,
-                method: 'GET'
+                method: "GET"
             });
-            
+
             return signedUrl;
         } catch (error: any) {
             logger.error(`生成签名URL失败: ${error.message}`);
@@ -182,7 +178,7 @@ export function createOSSUploaderFromEnv(): OSSUploader | null {
     // 密钥必须从环境变量获取
     const OSS_ACCESS_KEY_ID = process.env.OSS_ACCESS_KEY_ID;
     const OSS_ACCESS_KEY_SECRET = process.env.OSS_ACCESS_KEY_SECRET;
-    
+
     // 其他配置硬编码
     const OSS_ENDPOINT = "oss-cn-beijing.aliyuncs.com";
     const OSS_BUCKET_NAME = "aiagenttest";
@@ -191,7 +187,9 @@ export function createOSSUploaderFromEnv(): OSSUploader | null {
     // 检查密钥是否已配置
     if (!OSS_ACCESS_KEY_ID || !OSS_ACCESS_KEY_SECRET) {
         logger.warn("OSS密钥未配置，将无法使用OSS上传功能");
-        logger.warn("请配置环境变量: OSS_ACCESS_KEY_ID 和 OSS_ACCESS_KEY_SECRET");
+        logger.warn(
+            "请配置环境变量: OSS_ACCESS_KEY_ID 和 OSS_ACCESS_KEY_SECRET"
+        );
         return null;
     }
 
@@ -208,4 +206,3 @@ export function createOSSUploaderFromEnv(): OSSUploader | null {
         endpoint: OSS_ENDPOINT
     });
 }
-

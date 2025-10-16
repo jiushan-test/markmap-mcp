@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.5] - 2025-10-16
+
+### 🐛 Bug Fixes
+
+- **Fixed Smart File Naming**: Corrected the issue where OSS uploaded files were not using the smart file names based on user input
+  - Files are now correctly named with user input (e.g., `计算机科学-1760589461510.html` instead of `markmap-1760589461510.html`)
+  - Fixed path separator issue for cross-platform compatibility (Windows/Unix)
+  - Used `basename()` function to properly extract file names from paths
+
+### 🔧 Technical Changes
+
+- Updated `createMarkmap.ts`: Now passes local filename to OSS uploader
+- Updated `oss-uploader.ts`: Uses `basename()` for cross-platform path handling
+- Ensured `markmap/` directory prefix is maintained in OSS storage
+
+---
+
 ## [0.2.4] - 2025-10-16
 
 ### 🎯 Enhanced User Experience

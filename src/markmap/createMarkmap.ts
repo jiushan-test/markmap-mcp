@@ -1,14 +1,14 @@
 import { randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import { tmpdir } from "os";
-import { join } from "path";
+import { basename, join } from "path";
 
 import { Transformer, builtInPlugins } from "markmap-lib";
 import { fillTemplate } from "markmap-render";
 
 import open from "open";
-import { OSSUploader } from "../utils/oss-uploader.js";
 import logger from "../utils/logger.js";
+import { OSSUploader } from "../utils/oss-uploader.js";
 
 interface CreateMarkmapOptions {
     /**
@@ -65,7 +65,13 @@ interface CreateMarkmapResult {
 export async function createMarkmap(
     options: CreateMarkmapOptions
 ): Promise<CreateMarkmapResult> {
-    const { content, output, openIt = false, ossUploader = null, forceOSSUpload = false } = options;
+    const {
+        content,
+        output,
+        openIt = false,
+        ossUploader = null,
+        forceOSSUpload = false
+    } = options;
 
     // 如果没有提供输出路径，在临时目录生成默认文件路径
     const filePath = output || join(tmpdir(), `markmap-${randomUUID()}.html`);
@@ -314,9 +320,11 @@ export async function createMarkmap(
     if (ossUploader) {
         try {
             logger.info("检测到OSS上传器，开始上传文件到阿里云OSS");
+            // 使用本地文件的basename作为OSS文件名，保留智能命名
+            const fileName = basename(filePath);
             const uploadResult = await ossUploader.uploadFile(
                 filePath,
-                `markmap-${Date.now()}.html`
+                `markmap/${fileName}` // 包含markmap目录前缀
             );
             ossUrl = uploadResult.url;
             uploadedToOSS = true;
@@ -326,7 +334,7 @@ export async function createMarkmap(
             // 1. 强制OSS上传模式下，总是清理
             // 2. 或者：不需要在本地打开 且 没有指定输出路径
             const shouldCleanup = forceOSSUpload || (!openIt && !output);
-            
+
             if (shouldCleanup) {
                 try {
                     await fs.unlink(filePath);
@@ -337,12 +345,14 @@ export async function createMarkmap(
             }
         } catch (uploadError: any) {
             logger.error(`上传到OSS失败: ${uploadError.message}`);
-            
+
             // 如果强制要求OSS上传，则抛出错误
             if (forceOSSUpload) {
-                throw new Error(`强制OSS上传模式下上传失败: ${uploadError.message}`);
+                throw new Error(
+                    `强制OSS上传模式下上传失败: ${uploadError.message}`
+                );
             }
-            
+
             logger.warn("将继续使用本地文件路径");
             // 非强制模式下，上传失败不影响整体流程，继续使用本地文件
         }
