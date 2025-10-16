@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.4] - 2025-10-16
+
+### 🎯 Enhanced User Experience
+
+- **Simplified Return Value**: On success, now returns only the mind map URL (plain text) instead of JSON object
+- **Smart File Naming**: Generated files are now named based on user input content (sanitized and truncated to 50 characters)
+  - Example: `Python-programming-basics-1234567890.html`
+  - Special characters are removed, spaces are converted to hyphens
+  - Falls back to `mindmap` if input contains no valid characters
+
+### 🔧 Changes
+
+- **Response Format**: Success response is now just the URL string for easier direct access
+- **Error Format**: Failure response still returns detailed JSON with error information
+- **File Management**: More meaningful file names for better organization in OSS
+
+### 📝 Documentation
+
+- Updated README files (English and Chinese) with new return value format examples
+
+---
+
 ## [0.2.3] - 2025-10-16
 
 ### ⚡ Breaking Changes

@@ -144,14 +144,20 @@ The text will be processed by Qwen AI model to generate structured Markdown, the
 
 **Return Value:**
 
+On success, returns only the URL:
+
+```
+https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...
+```
+
+On failure, returns error details:
+
 ```json
 {
-  "success": true,
-  "userInput": "Python programming basics",
-  "generatedMarkdown": "# Python Programming Basics\n## Data Types\n...",
-  "mindmapUrl": "https://your-bucket.oss-cn-beijing.aliyuncs.com/markmap/xxx.html?...",
-  "uploadedToOSS": true,
-  "message": "Success! Mind map generated and uploaded to Aliyun OSS"
+  "success": false,
+  "error": "OSS upload failed",
+  "message": "思维导图已生成，但OSS上传失败",
+  "localPath": "/path/to/local/file.html"
 }
 ```
 

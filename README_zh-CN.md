@@ -144,14 +144,20 @@ node build/index.js
 
 **返回值：**
 
+成功时只返回URL链接：
+
+```
+https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python编程基础知识-1234567890.html?...
+```
+
+失败时返回错误详情：
+
 ```json
 {
-  "success": true,
-  "userInput": "Python 编程基础知识",
-  "generatedMarkdown": "# Python 编程基础\n## 数据类型\n...",
-  "mindmapUrl": "https://your-bucket.oss-cn-beijing.aliyuncs.com/markmap/xxx.html?...",
-  "uploadedToOSS": true,
-  "message": "成功！已生成思维导图并上传到阿里云OSS"
+  "success": false,
+  "error": "OSS upload failed",
+  "message": "思维导图已生成，但OSS上传失败",
+  "localPath": "/path/to/local/file.html"
 }
 ```
 

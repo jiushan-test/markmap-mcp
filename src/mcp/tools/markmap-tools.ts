@@ -83,7 +83,16 @@ export class MarkmapToolRegistry extends ToolRegistry {
 
                     // 步骤2: 直接从Markdown内容生成思维导图HTML（本地临时文件）
                     logger.info("步骤2: 从Markdown内容生成思维导图HTML");
-                    const filename = `mindmap-${Date.now()}.html`;
+
+                    // 根据用户输入生成文件名（清理特殊字符，限制长度）
+                    const sanitizedName =
+                        text
+                            .replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s]/g, "") // 只保留中文、英文、数字和空格
+                            .replace(/\s+/g, "-") // 空格替换为横线
+                            .substring(0, 50) || // 限制长度
+                        "mindmap"; // 如果清理后为空，使用默认名称
+
+                    const filename = `${sanitizedName}-${Date.now()}.html`;
                     const outputPath = join(this.context.output, filename);
 
                     // 注意：这里不会生成 .md 文件，Markdown 内容仅在内存中处理
@@ -95,36 +104,41 @@ export class MarkmapToolRegistry extends ToolRegistry {
                         forceOSSUpload: true // 强制上传HTML到OSS，上传后会自动删除本地临时HTML文件
                     });
 
-                    // 构建返回信息
-                    const responseData: any = {
-                        success: true,
-                        userInput: text,
-                        generatedMarkdown: markdownContent,
-                        mindmapUrl: result.ossUrl || result.filePath,
-                        uploadedToOSS: result.uploadedToOSS
-                    };
-
+                    // 如果上传成功，只返回URL链接
                     if (result.uploadedToOSS && result.ossUrl) {
-                        responseData.message =
-                            "成功！已生成思维导图并上传到阿里云OSS";
                         logger.info(`任务完成，思维导图URL: ${result.ossUrl}`);
+                        return {
+                            content: [
+                                {
+                                    type: "text",
+                                    text: result.ossUrl
+                                }
+                            ]
+                        };
                     } else {
-                        responseData.message =
-                            "思维导图已生成，但OSS上传失败，返回本地路径";
-                        responseData.warning = "建议检查OSS配置";
-                        logger.warn(
+                        // 如果上传失败，返回详细错误信息
+                        logger.error(
                             `OSS上传失败，本地路径: ${result.filePath}`
                         );
+                        return {
+                            content: [
+                                {
+                                    type: "text",
+                                    text: JSON.stringify(
+                                        {
+                                            success: false,
+                                            error: "OSS upload failed",
+                                            message:
+                                                "思维导图已生成，但OSS上传失败",
+                                            localPath: result.filePath
+                                        },
+                                        null,
+                                        2
+                                    )
+                                }
+                            ]
+                        };
                     }
-
-                    return {
-                        content: [
-                            {
-                                type: "text",
-                                text: JSON.stringify(responseData, null, 2)
-                            }
-                        ]
-                    };
                 } catch (error: any) {
                     logger.error(`生成思维导图失败: ${error.message}`);
                     return {
