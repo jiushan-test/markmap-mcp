@@ -3,9 +3,9 @@
 ![Sample Mindmap](./docs/markmap_zh.svg)
 
 [![NPM Version](https://img.shields.io/npm/v/@jiushan93/markmap-mcp-server.svg)](https://www.npmjs.com/package/@jiushan93/markmap-mcp-server)
-[![GitHub License](https://img.shields.io/github/license/jiushan93/markmap-mcp-server.svg)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/jiushan-test/markmap-mcp.svg)](LICENSE)
 [![English Doc](https://img.shields.io/badge/English-Click-blue)](README.md)
-[![Stars](https://img.shields.io/github/stars/jiushan93/markmap-mcp-server)](https://github.com/jiushan93/markmap-mcp-server)
+[![Stars](https://img.shields.io/github/stars/jiushan-test/markmap-mcp)](https://github.com/jiushan-test/markmap-mcp)
 
 Markmap MCP Server 基于 [模型上下文协议 (MCP)](https://modelcontextprotocol.io/introduction)，可将 Markdown 文本一键转换为交互式思维导图，底层采用开源项目 [markmap](https://github.com/markmap/markmap)。生成的思维导图支持丰富的交互操作，并可导出为多种图片格式。
 
@@ -47,10 +47,10 @@ npx -y @jiushan93/markmap-mcp-server --output /path/to/output/directory
 
 ```bash
 # 克隆仓库
-git clone https://github.com/jiushan93/markmap-mcp-server.git
+git clone https://github.com/jiushan-test/markmap-mcp.git
 
 # 导航到项目目录
-cd markmap-mcp-server
+cd markmap-mcp
 
 # 构建项目
 npm install && npm run build

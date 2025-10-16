@@ -3,9 +3,9 @@
 ![Sample Mindmap](./docs/markmap.svg)
 
 [![NPM Version](https://img.shields.io/npm/v/@jiushan93/markmap-mcp-server.svg)](https://www.npmjs.com/package/@jiushan93/markmap-mcp-server)
-[![GitHub License](https://img.shields.io/github/license/jiushan93/markmap-mcp-server.svg)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/jiushan-test/markmap-mcp.svg)](LICENSE)
 [![中文文档](https://img.shields.io/badge/中文文档-点击查看-blue)](README_zh-CN.md)
-[![Stars](https://img.shields.io/github/stars/jiushan93/markmap-mcp-server)](https://github.com/jiushan93/markmap-mcp-server)
+[![Stars](https://img.shields.io/github/stars/jiushan-test/markmap-mcp)](https://github.com/jiushan-test/markmap-mcp)
 
 Markmap MCP Server is based on the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) that allows one-click conversion of Markdown text to interactive mind maps, built on the open source project [markmap](https://github.com/markmap/markmap). The generated mind maps support rich interactive operations and can be exported in various image formats.
 
@@ -47,10 +47,10 @@ Alternatively, you can clone the repository and run locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/jiushan93/markmap-mcp-server.git
+git clone https://github.com/jiushan-test/markmap-mcp.git
 
 # Navigate to the project directory
-cd markmap-mcp-server
+cd markmap-mcp
 
 # Build project
 npm install && npm run build
