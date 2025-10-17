@@ -151,6 +151,15 @@ node build/index.js
 }
 ```
 
+**文件名生成规则：**
+
+系统会自动从生成的 Markdown 内容中提取第一个标题（# 标题）作为文件名：
+
+- 只保留中文、英文、数字字符
+- 限制长度为 20 个字符以内
+- 添加时间戳避免重名
+- 示例：`Python编程基础-1760693213328.html`
+
 **返回值：**
 
 成功时返回结构化的 JSON 响应（包含两个链接）：
@@ -170,9 +179,25 @@ node build/index.js
 
 - `downloadUrl`: OSS下载链接（长期有效，5年签名URL）
 - `previewUrl`: Minio预览链接（快速访问）
-- `filename`: 生成的文件名
+- `filename`: 自动生成的文件名（从第一个标题提取，限制20字符）
 - `timestamp`: 生成时间戳
 - `message`: 纯文本格式的状态消息（URL独立成行，便于复制）
+
+**message 字段格式：**
+
+```
+✓ 思维导图生成成功！（OSS + Minio 双存储）
+
+📥 下载文件：
+https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python编程基础知识-1234567890.html?...
+
+👁️ 在线预览：
+http://page.thingotech.com.cn/page/Python编程基础知识-1234567890.html
+
+📄 文件名：Python编程基础知识-1234567890.html
+
+💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。
+```
 
 失败时返回错误详情：
 

@@ -151,6 +151,15 @@ The text will be processed by Qwen AI model to generate structured Markdown, the
 }
 ```
 
+**Filename Generation Rules:**
+
+The system automatically extracts the first heading (# heading) from the generated Markdown as the filename:
+
+- Keeps only Chinese, English, and numeric characters
+- Limits length to 20 characters
+- Adds timestamp to avoid duplicates
+- Example: `Pythonprogrammingbasics-1760693213328.html`
+
 **Return Value:**
 
 On success, returns a structured JSON response (with two links):
@@ -170,9 +179,25 @@ On success, returns a structured JSON response (with two links):
 
 - `downloadUrl`: OSS download link (long-term valid, 5-year signed URL)
 - `previewUrl`: Minio preview link (fast access)
-- `filename`: Generated filename
+- `filename`: Auto-generated filename (extracted from first heading, max 20 chars)
 - `timestamp`: Generation timestamp
 - `message`: Plain text formatted status message (URLs on separate lines for easy copying)
+
+**message Field Format:**
+
+```
+✓ 思维导图生成成功！（OSS + Minio 双存储）
+
+📥 下载文件：
+https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...
+
+👁️ 在线预览：
+http://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html
+
+📄 文件名：Python-programming-basics-1234567890.html
+
+💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。
+```
 
 On failure, returns error details:
 
