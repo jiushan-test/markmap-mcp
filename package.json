@@ -1,7 +1,7 @@
 {
     "name": "@jiushan93/markmap-mcp-server",
-    "description": "AI-powered MCP server: Convert text to interactive mind maps using Qwen AI, with automatic OSS upload and export support (PNG/JPG/SVG/XMind)",
-    "version": "0.2.7",
+    "description": "AI-powered MCP server: Convert text to interactive mind maps using Qwen AI, with dual storage (OSS + Minio) and multi-format export (PNG/JPG/SVG/XMind)",
+    "version": "0.2.8",
     "author": "jinzcdev",
     "main": "./build/index.js",
     "keywords": [
@@ -15,9 +15,11 @@
         "dashscope",
         "aliyun",
         "oss",
+        "minio",
         "mind-map",
         "markdown",
-        "visualization"
+        "visualization",
+        "dual-storage"
     ],
     "scripts": {
         "test": "vitest run | pino-pretty",
@@ -53,6 +55,7 @@
         "@modelcontextprotocol/sdk": "^1.8.0",
         "ali-oss": "^6.23.0",
         "markmap-cli": "^0.18.11",
+        "minio": "^8.0.2",
         "minimist": "^1.2.8",
         "open": "^10.1.0",
         "pino": "^9.6.0",

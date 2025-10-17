@@ -3,6 +3,7 @@ import { join } from "path";
 import { z } from "zod";
 import { createMarkmap } from "../../markmap/createMarkmap.js";
 import logger from "../../utils/logger.js";
+import { createMinioUploaderFromEnv } from "../../utils/minio-uploader.js";
 import { createOSSUploaderFromEnv } from "../../utils/oss-uploader.js";
 import { createQwenAPIFromEnv } from "../../utils/qwen-api.js";
 import { MarkmapMcpContext } from "./context.js";
@@ -13,6 +14,8 @@ export class MarkmapToolRegistry extends ToolRegistry {
     private ossUploader = createOSSUploaderFromEnv();
     // 初始化Qwen API客户端（如果环境变量已配置）
     private qwenAPI = createQwenAPIFromEnv();
+    // 初始化Minio上传器（使用预设配置）
+    private minioUploader = createMinioUploaderFromEnv();
 
     public register(): void {
         // 注册文本到思维导图工具（使用AI生成Markdown）
@@ -101,19 +104,33 @@ export class MarkmapToolRegistry extends ToolRegistry {
                         output: outputPath,
                         openIt: false,
                         ossUploader: this.ossUploader,
-                        forceOSSUpload: true // 强制上传HTML到OSS，上传后会自动删除本地临时HTML文件
+                        minioUploader: this.minioUploader,
+                        forceOSSUpload: true // 强制上传HTML到OSS和Minio，上传后会自动删除本地临时HTML文件
                     });
 
-                    // 如果上传成功，返回结构化结果
+                    // 如果上传成功，返回结构化结果（包含两个链接）
                     if (result.uploadedToOSS && result.ossUrl) {
-                        logger.info(`任务完成，思维导图URL: ${result.ossUrl}`);
+                        logger.info(
+                            `任务完成，思维导图OSS URL: ${result.ossUrl}`
+                        );
+
                         const response = {
                             success: true,
-                            url: result.ossUrl,
+                            downloadUrl: result.ossUrl, // OSS下载链接
+                            previewUrl: result.minioUrl || result.ossUrl, // Minio预览链接，如果Minio上传失败则使用OSS链接
                             filename: filename,
                             timestamp: new Date().toISOString(),
-                            message: "思维导图生成并上传成功"
+                            message: result.uploadedToMinio
+                                ? "思维导图生成并上传成功（OSS + Minio）"
+                                : "思维导图生成并上传成功（仅OSS，Minio上传失败）"
                         };
+
+                        if (result.uploadedToMinio && result.minioUrl) {
+                            logger.info(`Minio预览URL: ${result.minioUrl}`);
+                        } else {
+                            logger.warn("Minio上传失败，仅使用OSS链接");
+                        }
+
                         return {
                             content: [
                                 {

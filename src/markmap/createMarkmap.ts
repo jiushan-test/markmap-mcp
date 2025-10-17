@@ -8,6 +8,7 @@ import { fillTemplate } from "markmap-render";
 
 import open from "open";
 import logger from "../utils/logger.js";
+import { MinioUploader } from "../utils/minio-uploader.js";
 import { OSSUploader } from "../utils/oss-uploader.js";
 
 interface CreateMarkmapOptions {
@@ -30,6 +31,11 @@ interface CreateMarkmapOptions {
      */
     ossUploader?: OSSUploader | null;
     /**
+     * Minio uploader instance for uploading to Minio storage
+     * If provided, the file will be uploaded to Minio
+     */
+    minioUploader?: MinioUploader | null;
+    /**
      * Force upload to OSS even if openIt is true
      * When true, will throw error if OSS upload fails
      * @default false
@@ -51,9 +57,17 @@ interface CreateMarkmapResult {
      */
     ossUrl?: string;
     /**
+     * Minio URL if uploaded to Minio storage
+     */
+    minioUrl?: string;
+    /**
      * Whether the file was uploaded to OSS
      */
     uploadedToOSS: boolean;
+    /**
+     * Whether the file was uploaded to Minio
+     */
+    uploadedToMinio: boolean;
 }
 
 /**
@@ -70,6 +84,7 @@ export async function createMarkmap(
         output,
         openIt = false,
         ossUploader = null,
+        minioUploader = null,
         forceOSSUpload = false
     } = options;
 
@@ -457,6 +472,8 @@ export async function createMarkmap(
     // 如果提供了OSS上传器，则上传到云存储
     let ossUrl: string | undefined;
     let uploadedToOSS = false;
+    let minioUrl: string | undefined;
+    let uploadedToMinio = false;
 
     if (ossUploader) {
         try {
@@ -502,6 +519,26 @@ export async function createMarkmap(
         throw new Error("强制OSS上传模式下必须配置OSS上传器");
     }
 
+    // 如果提供了Minio上传器，则上传到Minio存储
+    if (minioUploader) {
+        try {
+            logger.info("检测到Minio上传器，开始上传文件到Minio");
+            // 使用本地文件的basename作为Minio文件名，保留智能命名
+            const fileName = basename(filePath);
+            const uploadResult = await minioUploader.uploadFile(
+                filePath,
+                fileName
+            );
+            minioUrl = uploadResult.url;
+            uploadedToMinio = true;
+            logger.info(`文件已成功上传到Minio: ${minioUrl}`);
+        } catch (uploadError: any) {
+            logger.error(`上传到Minio失败: ${uploadError.message}`);
+            // Minio上传失败不影响整体流程，仅记录警告
+            logger.warn("将继续，但Minio预览链接不可用");
+        }
+    }
+
     // 如果需要在浏览器中打开（仅当文件在本地时）
     if (openIt && !uploadedToOSS) {
         await open(filePath);
@@ -512,6 +549,8 @@ export async function createMarkmap(
         filePath: uploadedToOSS ? ossUrl! : filePath,
         content: updatedContent,
         ossUrl,
-        uploadedToOSS
+        minioUrl,
+        uploadedToOSS,
+        uploadedToMinio
     };
 }

@@ -7,6 +7,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.8] - 2025-10-17
+
+### ✨ New Features
+
+- **双存储支持**: 新增 Minio 存储支持，同时上传到阿里云 OSS 和 Minio
+  - 返回两个链接：OSS 下载链接（downloadUrl）和 Minio 预览链接（previewUrl）
+  - OSS 链接：长期有效，5年签名URL，适合下载和归档
+  - Minio 链接：快速访问，适合即时预览
+  - Minio 上传失败不影响整体流程，会降级使用 OSS 链接
+
+### 🔧 Technical Details
+
+- **新增文件**: `src/utils/minio-uploader.ts` - Minio 上传工具类
+- **更新接口**: `CreateMarkmapResult` 新增 `minioUrl` 和 `uploadedToMinio` 字段
+- **返回值变更**:
+  - `url` → `downloadUrl`（OSS 下载链接）
+  - 新增 `previewUrl`（Minio 预览链接）
+- **依赖更新**: 添加 `minio@^8.0.2` 依赖
+
+### 📝 Minio Configuration
+
+**必需的环境变量：**
+
+- `MINIO_ACCESS_KEY`: Minio 访问密钥
+- `MINIO_SECRET_KEY`: Minio 访问密钥 Secret
+
+**预设配置（硬编码在代码中）：**
+
+- Minio 端点: `119.45.11.171`
+- Minio 存储桶: `page`
+- Minio 预览URL基础路径: `http://page.thingotech.com.cn/page`
+
+### 📚 Documentation Updates
+
+- 更新 README.md 和 README_zh-CN.md
+- 新增双链接返回值说明
+- 新增字段描述文档
+
+### 🔄 Breaking Changes
+
+- **返回值格式变更**:
+  - **旧格式**: `url` 字段
+  - **新格式**: `downloadUrl` 和 `previewUrl` 字段
+  ```json
+  {
+    "success": true,
+    "downloadUrl": "https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/file.html?...",
+    "previewUrl": "http://page.thingotech.com.cn/page/file.html",
+    "filename": "file.html",
+    "timestamp": "2025-10-17T07:45:30.123Z",
+    "message": "思维导图生成并上传成功（OSS + Minio）"
+  }
+  ```
+
+---
+
 ## [0.2.7] - 2025-10-17
 
 ### ✨ New Features

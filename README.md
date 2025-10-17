@@ -17,8 +17,9 @@ Markmap MCP Server is based on the [Model Context Protocol (MCP)](https://modelc
 
 - 🤖 **AI-Powered Generation**: Generate mind maps from plain text using Alibaba Cloud Qwen AI (NEW in v0.2.0)
 - 🌠 **Markdown to Mind Map**: Convert Markdown text to interactive mind maps
-- 🔗 **URL Download Support**: Download Markdown files directly from URLs for conversion
+- 🔗 **Dual Storage Support**: Upload to both Aliyun OSS and Minio, providing download and preview links (NEW in v0.2.8)
 - ☁️ **Aliyun OSS Integration**: Automatically upload generated mind maps to Aliyun Object Storage and get online access links
+- 🚀 **Minio Fast Preview**: Provide Minio preview links for fast access
 - 🖼️ **Multi-format Export**: Support for exporting as PNG, JPG, SVG images, and XMind-compatible format
 - 🔄 **Interactive Operations**: Support for zooming, expanding/collapsing nodes, and other interactive features
 - 📋 **Markdown Copy**: One-click copy of the original Markdown content
@@ -73,7 +74,7 @@ The following configurations are **pre-configured** in the code:
 - Qwen Model: `qwen3-235b-a22b-thinking-2507`
 - API URL: `https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
 
-**You only need to provide the API keys:**
+**You need to provide the following API keys:**
 
 ```json
 {
@@ -85,7 +86,9 @@ The following configurations are **pre-configured** in the code:
       "env": {
         "DASHSCOPE_API_KEY": "sk-your-dashscope-api-key",
         "OSS_ACCESS_KEY_ID": "your-oss-access-key-id",
-        "OSS_ACCESS_KEY_SECRET": "your-oss-access-key-secret"
+        "OSS_ACCESS_KEY_SECRET": "your-oss-access-key-secret",
+        "MINIO_ACCESS_KEY": "your-minio-access-key",
+        "MINIO_SECRET_KEY": "your-minio-secret-key"
       }
     }
   }
@@ -102,6 +105,8 @@ The following configurations are **pre-configured** in the code:
 >   - Get from: https://dashscope.console.aliyun.com/
 > - `OSS_ACCESS_KEY_ID`: Aliyun OSS Access Key ID **(Required)**
 > - `OSS_ACCESS_KEY_SECRET`: Aliyun OSS Access Key Secret **(Required)**
+> - `MINIO_ACCESS_KEY`: Minio Access Key **(Required)**
+> - `MINIO_SECRET_KEY`: Minio Secret Key **(Required)**
 >
 > **Pre-configured Settings (Hard-coded in the application):**
 >
@@ -110,6 +115,9 @@ The following configurations are **pre-configured** in the code:
 > - OSS Bucket: `aiagenttest`
 > - OSS Region: `oss-cn-beijing`
 > - OSS Endpoint: `oss-cn-beijing.aliyuncs.com`
+> - Minio Endpoint: `119.45.11.171`
+> - Minio Bucket: `page`
+> - Minio Preview URL: `http://page.thingotech.com.cn/page`
 >
 > **Optional Configuration:**
 >
@@ -117,10 +125,11 @@ The following configurations are **pre-configured** in the code:
 >
 > **⚠️ Important Notes:**
 >
-> - Only API keys need to be configured via environment variables
-> - All other settings (bucket, region, model) are pre-configured
-> - Mind maps are stored in OSS and return signed URLs (5-year validity)
-> - Temporary local files are automatically deleted after OSS upload
+> - Need to configure 5 API keys via environment variables (DashScope, OSS, Minio)
+> - All other settings (buckets, regions, model, endpoints) are pre-configured
+> - Mind maps are uploaded to both OSS and Minio, returning two links
+> - OSS link valid for 5 years, Minio link for fast preview
+> - Temporary local files are automatically deleted after upload
 
 ## Available Tool
 
@@ -144,17 +153,26 @@ The text will be processed by Qwen AI model to generate structured Markdown, the
 
 **Return Value:**
 
-On success, returns a structured JSON response:
+On success, returns a structured JSON response (with two links):
 
 ```json
 {
   "success": true,
-  "url": "https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...",
+  "downloadUrl": "https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...",
+  "previewUrl": "http://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html",
   "filename": "Python-programming-basics-1234567890.html",
   "timestamp": "2025-10-17T07:45:30.123Z",
-  "message": "思维导图生成并上传成功"
+  "message": "思维导图生成并上传成功（OSS + Minio）"
 }
 ```
+
+**Field Descriptions:**
+
+- `downloadUrl`: OSS download link (long-term valid, 5-year signed URL)
+- `previewUrl`: Minio preview link (fast access)
+- `filename`: Generated filename
+- `timestamp`: Generation timestamp
+- `message`: Status message
 
 On failure, returns error details:
 
