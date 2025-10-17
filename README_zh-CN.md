@@ -162,7 +162,7 @@ node build/index.js
   "previewUrl": "http://page.thingotech.com.cn/page/Python编程基础知识-1234567890.html",
   "filename": "Python编程基础知识-1234567890.html",
   "timestamp": "2025-10-17T07:45:30.123Z",
-  "message": "思维导图生成并上传成功（OSS + Minio）"
+  "message": "✓ 思维导图生成成功！（OSS + Minio 双存储）\n\n[📥 下载文件](https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python编程基础知识-1234567890.html?...)\n\n[👁️ 在线预览](http://page.thingotech.com.cn/page/Python编程基础知识-1234567890.html)\n\n📄 文件名：Python编程基础知识-1234567890.html\n\n💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。"
 }
 ```
 
@@ -172,7 +172,7 @@ node build/index.js
 - `previewUrl`: Minio预览链接（快速访问）
 - `filename`: 生成的文件名
 - `timestamp`: 生成时间戳
-- `message`: 状态消息
+- `message`: Markdown 格式的状态消息（包含可点击链接）
 
 失败时返回错误详情：
 
