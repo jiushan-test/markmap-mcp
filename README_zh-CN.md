@@ -144,10 +144,16 @@ node build/index.js
 
 **返回值：**
 
-成功时只返回URL链接：
+成功时返回结构化的 JSON 响应：
 
-```
-https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python编程基础知识-1234567890.html?...
+```json
+{
+  "success": true,
+  "url": "https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python编程基础知识-1234567890.html?...",
+  "filename": "Python编程基础知识-1234567890.html",
+  "timestamp": "2025-10-17T07:45:30.123Z",
+  "message": "思维导图生成并上传成功"
+}
 ```
 
 失败时返回错误详情：

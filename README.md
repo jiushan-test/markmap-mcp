@@ -144,10 +144,16 @@ The text will be processed by Qwen AI model to generate structured Markdown, the
 
 **Return Value:**
 
-On success, returns only the URL:
+On success, returns a structured JSON response:
 
-```
-https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...
+```json
+{
+  "success": true,
+  "url": "https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...",
+  "filename": "Python-programming-basics-1234567890.html",
+  "timestamp": "2025-10-17T07:45:30.123Z",
+  "message": "思维导图生成并上传成功"
+}
 ```
 
 On failure, returns error details:

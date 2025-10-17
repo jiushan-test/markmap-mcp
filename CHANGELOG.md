@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.7] - 2025-10-17
+
+### ✨ New Features
+
+- **结构化返回值**: `text-to-mindmap` 工具现在返回结构化的 JSON 响应
+  - 包含 `success` 状态
+  - 包含 `url` 链接
+  - 包含 `filename` 文件名
+  - 包含 `timestamp` 时间戳（ISO 8601 格式）
+  - 包含 `message` 状态消息
+
+### 📝 Documentation
+
+- 更新 README 和 README_zh-CN，展示新的结构化返回值格式
+- 更新返回值示例，展示完整的 JSON 响应结构
+
+### 🔄 Breaking Changes
+
+- **返回格式变更**: 成功时不再只返回纯文本 URL，而是返回包含完整信息的 JSON 对象
+  - **旧格式**: `https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/file.html?...`
+  - **新格式**:
+    ```json
+    {
+      "success": true,
+      "url": "https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/file.html?...",
+      "filename": "file.html",
+      "timestamp": "2025-10-17T07:45:30.123Z",
+      "message": "思维导图生成并上传成功"
+    }
+    ```
+
+---
+
 ## [0.2.6] - 2025-10-16
 
 ### ✨ New Features

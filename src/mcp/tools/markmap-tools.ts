@@ -104,14 +104,21 @@ export class MarkmapToolRegistry extends ToolRegistry {
                         forceOSSUpload: true // 强制上传HTML到OSS，上传后会自动删除本地临时HTML文件
                     });
 
-                    // 如果上传成功，只返回URL链接
+                    // 如果上传成功，返回结构化结果
                     if (result.uploadedToOSS && result.ossUrl) {
                         logger.info(`任务完成，思维导图URL: ${result.ossUrl}`);
+                        const response = {
+                            success: true,
+                            url: result.ossUrl,
+                            filename: filename,
+                            timestamp: new Date().toISOString(),
+                            message: "思维导图生成并上传成功"
+                        };
                         return {
                             content: [
                                 {
                                     type: "text",
-                                    text: result.ossUrl
+                                    text: JSON.stringify(response, null, 2)
                                 }
                             ]
                         };
