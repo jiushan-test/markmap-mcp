@@ -162,7 +162,7 @@ On success, returns a structured JSON response (with two links):
   "previewUrl": "http://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html",
   "filename": "Python-programming-basics-1234567890.html",
   "timestamp": "2025-10-17T07:45:30.123Z",
-  "message": "✓ 思维导图生成成功！（OSS + Minio 双存储）\n\n[📥 下载文件](https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...)\n\n[👁️ 在线预览](http://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html)\n\n📄 文件名：Python-programming-basics-1234567890.html\n\n💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。"
+  "message": "✓ 思维导图生成成功！（OSS + Minio 双存储）\n\n📥 下载文件：\nhttps://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...\n\n👁️ 在线预览：\nhttp://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html\n\n📄 文件名：Python-programming-basics-1234567890.html\n\n💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。"
 }
 ```
 
@@ -172,7 +172,7 @@ On success, returns a structured JSON response (with two links):
 - `previewUrl`: Minio preview link (fast access)
 - `filename`: Generated filename
 - `timestamp`: Generation timestamp
-- `message`: Markdown formatted status message (with clickable links)
+- `message`: Plain text formatted status message (URLs on separate lines for easy copying)
 
 On failure, returns error details:
 

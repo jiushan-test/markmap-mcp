@@ -114,7 +114,7 @@ export class MarkmapToolRegistry extends ToolRegistry {
                             `任务完成，思维导图OSS URL: ${result.ossUrl}`
                         );
 
-                        // 生成友好的 Markdown 格式 message（包含可点击链接）
+                        // 生成纯文本格式 message（直接显示完整 URL，最佳兼容性）
                         const downloadUrl = result.ossUrl;
                         const previewUrl = result.minioUrl || result.ossUrl;
                         const storageInfo = result.uploadedToMinio
@@ -123,13 +123,15 @@ export class MarkmapToolRegistry extends ToolRegistry {
 
                         const message = `✓ 思维导图生成成功！${storageInfo}
 
-[📥 下载文件](${downloadUrl})
+📥 下载文件：
+${downloadUrl}
 
-[👁️ 在线预览](${previewUrl})
+👁️ 在线预览：
+${previewUrl}
 
 📄 文件名：${filename}
 
-💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。`;
+💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。`;
 
                         const response = {
                             success: true,

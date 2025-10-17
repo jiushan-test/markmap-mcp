@@ -17,7 +17,7 @@
 }
 ```
 
-## 修改后的返回值（推荐格式 - Markdown 超链接）
+## 修改后的返回值（纯文本格式 - 最佳兼容性）
 
 ```json
 {
@@ -26,44 +26,33 @@
   "previewUrl": "http://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html",
   "filename": "Python-programming-basics-1234567890.html",
   "timestamp": "2025-10-17T07:45:30.123Z",
-  "message": "✓ 思维导图生成成功！\n\n[📥 下载文件](https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...)\n\n[👁️ 在线预览](http://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html)\n\n📄 文件名：Python-programming-basics-1234567890.html\n\n💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠等交互操作。"
-}
-```
-
-### 如果前端不支持 Markdown，使用 HTML 格式
-
-```json
-{
-  "success": true,
-  "downloadUrl": "https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...",
-  "previewUrl": "http://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html",
-  "filename": "Python-programming-basics-1234567890.html",
-  "timestamp": "2025-10-17T07:45:30.123Z",
-  "message": "✓ 思维导图生成成功！\n\n<a href=\"https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...\" target=\"_blank\">📥 下载文件</a>\n\n<a href=\"http://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html\" target=\"_blank\">👁️ 在线预览</a>\n\n📄 文件名：Python-programming-basics-1234567890.html\n\n💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠等交互操作。"
+  "message": "✓ 思维导图生成成功！\n\n📥 下载文件：\nhttps://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/Python-programming-basics-1234567890.html?...\n\n👁️ 在线预览：\nhttp://page.thingotech.com.cn/page/Python-programming-basics-1234567890.html\n\n📄 文件名：Python-programming-basics-1234567890.html\n\n💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。"
 }
 ```
 
 ## 代码实现示例
 
-### 方案 1：Markdown 格式（推荐）
+### 方案 1：纯文本格式（推荐 - 最佳兼容性）
 
 **Python 实现**
 
 ```python
 def generate_mindmap_response(download_url, preview_url, filename, timestamp):
     """
-    生成 Markdown 超链接格式的 message
-    前端支持 Markdown 渲染时使用
+    生成纯文本格式的 message
+    直接显示完整 URL，无需前端渲染支持
     """
     message = f"""✓ 思维导图生成成功！
 
-[📥 下载文件]({download_url})
+📥 下载文件：
+{download_url}
 
-[👁️ 在线预览]({preview_url})
+👁️ 在线预览：
+{preview_url}
 
 📄 文件名：{filename}
 
-💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠等交互操作。"""
+💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。"""
 
     return {
         "success": True,
@@ -81,13 +70,15 @@ def generate_mindmap_response(download_url, preview_url, filename, timestamp):
 function generateMindmapResponse(downloadUrl, previewUrl, filename, timestamp) {
   const message = `✓ 思维导图生成成功！
 
-[📥 下载文件](${downloadUrl})
+📥 下载文件：
+${downloadUrl}
 
-[👁️ 在线预览](${previewUrl})
+👁️ 在线预览：
+${previewUrl}
 
 📄 文件名：${filename}
 
-💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠等交互操作。`;
+💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。`;
 
   return {
     success: true,
@@ -177,7 +168,7 @@ function generateMindmapResponseHTML(
 
 ## 测试验证
 
-### 方案 1 测试（Markdown 超链接）
+### 方案 1 测试（纯文本格式）
 
 MCP 服务器返回：
 
@@ -188,25 +179,27 @@ MCP 服务器返回：
   "previewUrl": "http://...",
   "filename": "xxx.html",
   "timestamp": "2025-10-17T...",
-  "message": "✓ 思维导图生成成功！\n\n[📥 下载文件](https://...)\n\n[👁️ 在线预览](http://...)\n\n📄 文件名：xxx.html\n\n💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠等交互操作。"
+  "message": "✓ 思维导图生成成功！\n\n📥 下载文件：\nhttps://...\n\n👁️ 在线预览：\nhttp://...\n\n📄 文件名：xxx.html\n\n💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。"
 }
 ```
 
-**前端渲染效果（如果支持 Markdown）：**
+**前端渲染效果（纯文本）：**
 
 ✓ 思维导图生成成功！
 
-<u style="color: blue; cursor: pointer;">📥 下载文件</u> ← 可点击
+📥 下载文件：
+https://... ← 用户可以复制
 
-<u style="color: blue; cursor: pointer;">👁️ 在线预览</u> ← 可点击
+👁️ 在线预览：
+http://... ← 用户可以复制
 
 📄 文件名：xxx.html
 
-💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠等交互操作。
+💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。
 
 ---
 
-### 方案 2 测试（HTML 超链接）
+### 方案 2 测试（HTML 超链接 - 如果前端支持 HTML 渲染）
 
 MCP 服务器返回：
 
@@ -236,8 +229,30 @@ MCP 服务器返回：
 ## 总结
 
 - ✅ **不修改 agent-network 框架**
-- ✅ **配置文件已优化**（`config/mcp/mindmap.json`）
-- ✅ **只需修改 MCP 服务器的 message 字段格式**
-- ✅ **用户体验最佳**（第一轮就能看到完整链接）
+- ✅ **配置文件已优化**（`config/mcp/mindmap.json` - 使用最激进的提示词）
+- ✅ **MCP 服务器改用纯文本格式**（最佳兼容性，无需前端渲染支持）
+- ✅ **用户可以直接复制 URL**（即使前端不支持超链接）
 
-**下一步：修改你的 MCP 服务器代码，重启服务测试！** 🚀
+## 下一步行动
+
+1. **修改 MCP 服务器**：将 `message` 字段改为纯文本格式（方案 1）
+
+   ```
+   message = f"""✓ 思维导图生成成功！
+
+   📥 下载文件：
+   {download_url}
+
+   👁️ 在线预览：
+   {preview_url}
+
+   📄 文件名：{filename}
+
+   💡 提示：复制上方链接到浏览器即可访问思维导图。"""
+   ```
+
+2. **重启 agent-network 服务**（让新的 `config/mcp/mindmap.json` 生效）
+
+3. **测试**：发送"生成计算机科学思维导图"，查看前端是否显示完整 URL
+
+**如果还是不显示链接，那就真的只能修改框架了！** 🎯

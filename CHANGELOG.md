@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.12] - 2025-10-17
+
+### 🔄 格式优化
+
+- **改用纯文本格式**: message 字段从 Markdown 格式改为纯文本格式，提供最佳兼容性
+  - 问题：Markdown 格式需要前端渲染支持，部分环境可能不支持
+  - 改进：使用纯文本格式，URL 独立成行，用户可直接复制
+  - 格式：`📥 下载文件：\n{url}` 而不是 `[📥 下载文件](url)`
+  - 优势：无需前端特殊渲染，所有环境都能正确显示
+
+### 📋 新的返回值格式
+
+**message 字段内容**：
+
+```
+✓ 思维导图生成成功！（OSS + Minio 双存储）
+
+📥 下载文件：
+https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/xxx.html?...
+
+👁️ 在线预览：
+http://page.thingotech.com.cn/page/xxx.html
+
+📄 文件名：xxx.html
+
+💡 提示：复制上方链接到浏览器即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。
+```
+
+### ✨ 优势
+
+1. **最佳兼容性** - 纯文本格式无需任何前端渲染支持
+2. **易于复制** - URL 独立成行，便于用户选择和复制
+3. **清晰显示** - 在任何环境下都能正确显示完整 URL
+4. **AI 友好** - 适合 AI Agent 框架直接输出给用户
+
+---
+
 ## [0.2.11] - 2025-10-17
 
 ### ✨ 新特性
