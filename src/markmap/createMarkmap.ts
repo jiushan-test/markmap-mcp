@@ -487,20 +487,6 @@ export async function createMarkmap(
             ossUrl = uploadResult.url;
             uploadedToOSS = true;
             logger.info(`文件已成功上传到OSS: ${ossUrl}`);
-
-            // 清理本地临时文件的条件：
-            // 1. 强制OSS上传模式下，总是清理
-            // 2. 或者：不需要在本地打开 且 没有指定输出路径
-            const shouldCleanup = forceOSSUpload || (!openIt && !output);
-
-            if (shouldCleanup) {
-                try {
-                    await fs.unlink(filePath);
-                    logger.info(`已清理本地临时HTML文件: ${filePath}`);
-                } catch (cleanupError) {
-                    logger.warn(`清理临时HTML文件失败: ${cleanupError}`);
-                }
-            }
         } catch (uploadError: any) {
             logger.error(`上传到OSS失败: ${uploadError.message}`);
 
@@ -536,6 +522,18 @@ export async function createMarkmap(
             logger.error(`上传到Minio失败: ${uploadError.message}`);
             // Minio上传失败不影响整体流程，仅记录警告
             logger.warn("将继续，但Minio预览链接不可用");
+        }
+    }
+
+    // 清理本地临时文件（在所有上传完成后）
+    // 条件：1. 强制OSS上传模式下，总是清理  2. 或者：不需要在本地打开 且 没有指定输出路径
+    const shouldCleanup = forceOSSUpload || (!openIt && !output);
+    if (shouldCleanup && (uploadedToOSS || uploadedToMinio)) {
+        try {
+            await fs.unlink(filePath);
+            logger.info(`已清理本地临时HTML文件: ${filePath}`);
+        } catch (cleanupError) {
+            logger.warn(`清理临时HTML文件失败: ${cleanupError}`);
         }
     }
 
