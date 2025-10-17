@@ -87,12 +87,18 @@ export class MarkmapToolRegistry extends ToolRegistry {
                     // 步骤2: 直接从Markdown内容生成思维导图HTML（本地临时文件）
                     logger.info("步骤2: 从Markdown内容生成思维导图HTML");
 
-                    // 根据用户输入生成文件名（清理特殊字符，限制长度）
+                    // 从Markdown内容中提取第一个标题作为文件名（优先使用 # 标题）
+                    const firstHeadingMatch =
+                        markdownContent.match(/^#\s+(.+?)$/m);
+                    const titleText = firstHeadingMatch
+                        ? firstHeadingMatch[1]
+                        : text; // 如果没有标题，使用用户输入
+
+                    // 清理文件名（只保留中文、英文、数字，限制长度）
                     const sanitizedName =
-                        text
-                            .replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s]/g, "") // 只保留中文、英文、数字和空格
-                            .replace(/\s+/g, "-") // 空格替换为横线
-                            .substring(0, 50) || // 限制长度
+                        titleText
+                            .replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, "") // 只保留中文、英文、数字
+                            .substring(0, 20) || // 限制为20个字符
                         "mindmap"; // 如果清理后为空，使用默认名称
 
                     const filename = `${sanitizedName}-${Date.now()}.html`;
