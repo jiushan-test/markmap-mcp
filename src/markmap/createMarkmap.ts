@@ -392,25 +392,71 @@ export async function createMarkmap(
             
             const markdownContent = markdownElement.value;
             
-            // Copy to clipboard
-            navigator.clipboard.writeText(markdownContent)
-              .then(() => {
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '✓ 已复制';
-                copyBtn.style.backgroundColor = '#2ecc71';
-                
-                setTimeout(() => {
-                  copyBtn.innerHTML = originalText;
-                  copyBtn.style.backgroundColor = '';
-                }, 2000);
-              })
-              .catch(err => {
-                console.error('复制失败:', err);
-                alert('复制失败，请检查浏览器权限');
-              });
+            // 检查是否支持现代 Clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              // 使用现代 Clipboard API
+              navigator.clipboard.writeText(markdownContent)
+                .then(() => {
+                  showCopySuccess();
+                })
+                .catch(err => {
+                  console.error('Clipboard API 复制失败:', err);
+                  // 降级到传统方法
+                  fallbackCopy(markdownContent);
+                });
+            } else {
+              // 降级到传统复制方法
+              fallbackCopy(markdownContent);
+            }
           } catch (e) {
             console.error('复制Markdown错误:', e);
             alert('无法复制Markdown：' + e.message);
+          }
+        }
+        
+        // 显示复制成功提示
+        function showCopySuccess() {
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '✓ 已复制';
+          copyBtn.style.backgroundColor = '#2ecc71';
+          
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+            copyBtn.style.backgroundColor = '';
+          }, 2000);
+        }
+        
+        // 降级复制方法（兼容旧浏览器和 HTTP 环境）
+        function fallbackCopy(text) {
+          try {
+            // 创建临时 textarea
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '0';
+            textarea.style.left = '0';
+            textarea.style.width = '1px';
+            textarea.style.height = '1px';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            
+            // 选择文本
+            textarea.focus();
+            textarea.select();
+            textarea.setSelectionRange(0, text.length);
+            
+            // 执行复制命令
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            if (successful) {
+              showCopySuccess();
+            } else {
+              throw new Error('execCommand 复制失败');
+            }
+          } catch (err) {
+            console.error('降级复制方法失败:', err);
+            alert('复制失败：您的浏览器可能不支持此功能。\\n\\n提示：请尝试手动选择并复制内容，或使用 HTTPS 访问。');
           }
         }
 

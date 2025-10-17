@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.10] - 2025-10-17
+
+### 🐛 Bug Fixes
+
+- **修复复制 Markdown 功能**: 解决了 `navigator.clipboard` 在某些环境下不可用的问题
+  - 问题：在 HTTP 环境或旧浏览器中，`navigator.clipboard` 为 undefined，导致复制失败
+  - 修复：添加 Clipboard API 可用性检查和降级处理
+  - 降级方案：使用传统的 `document.execCommand('copy')` 方法
+  - 兼容性：现在支持更多浏览器和 HTTP/HTTPS 环境
+
+### 🔧 Technical Details
+
+**修复内容**：
+
+1. 添加 `navigator.clipboard` 可用性检查
+2. 实现 `fallbackCopy()` 降级方法（使用 textarea + execCommand）
+3. 提取 `showCopySuccess()` 共用函数
+4. 改进错误提示信息
+
+**兼容性改进**：
+
+- ✅ 现代浏览器 (HTTPS): 使用 Clipboard API
+- ✅ 旧浏览器: 使用 execCommand
+- ✅ HTTP 环境: 自动降级到 execCommand
+- ✅ 不支持环境: 友好的错误提示
+
+---
+
 ## [0.2.9] - 2025-10-17
 
 ### 🐛 Bug Fixes

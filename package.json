@@ -1,7 +1,7 @@
 {
     "name": "@jiushan93/markmap-mcp-server",
     "description": "AI-powered MCP server: Convert text to interactive mind maps using Qwen AI, with dual storage (OSS + Minio) and multi-format export (PNG/JPG/SVG/XMind)",
-    "version": "0.2.9",
+    "version": "0.2.10",
     "author": "jinzcdev",
     "main": "./build/index.js",
     "keywords": [
