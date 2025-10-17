@@ -114,15 +114,30 @@ export class MarkmapToolRegistry extends ToolRegistry {
                             `任务完成，思维导图OSS URL: ${result.ossUrl}`
                         );
 
+                        // 生成友好的 Markdown 格式 message（包含可点击链接）
+                        const downloadUrl = result.ossUrl;
+                        const previewUrl = result.minioUrl || result.ossUrl;
+                        const storageInfo = result.uploadedToMinio
+                            ? "（OSS + Minio 双存储）"
+                            : "（仅 OSS 存储）";
+
+                        const message = `✓ 思维导图生成成功！${storageInfo}
+
+[📥 下载文件](${downloadUrl})
+
+[👁️ 在线预览](${previewUrl})
+
+📄 文件名：${filename}
+
+💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。`;
+
                         const response = {
                             success: true,
-                            downloadUrl: result.ossUrl, // OSS下载链接
-                            previewUrl: result.minioUrl || result.ossUrl, // Minio预览链接，如果Minio上传失败则使用OSS链接
+                            downloadUrl: downloadUrl, // OSS下载链接
+                            previewUrl: previewUrl, // Minio预览链接，如果Minio上传失败则使用OSS链接
                             filename: filename,
                             timestamp: new Date().toISOString(),
-                            message: result.uploadedToMinio
-                                ? "思维导图生成并上传成功（OSS + Minio）"
-                                : "思维导图生成并上传成功（仅OSS，Minio上传失败）"
+                            message: message
                         };
 
                         if (result.uploadedToMinio && result.minioUrl) {

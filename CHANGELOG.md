@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.11] - 2025-10-17
+
+### ✨ 新特性
+
+- **优化返回值格式**: message 字段现在包含 Markdown 格式的可点击链接
+  - 问题：之前的 message 只是纯文本描述，用户需要从其他字段获取链接
+  - 改进：现在 message 包含格式化的 Markdown 超链接，便于前端直接渲染
+  - 格式：使用 `[📥 下载文件](url)` 和 `[👁️ 在线预览](url)` 格式
+  - 兼容性：支持 Markdown 渲染的前端可以直接显示可点击链接
+
+### 📋 返回值格式示例
+
+**新格式 message 内容**：
+
+```
+✓ 思维导图生成成功！（OSS + Minio 双存储）
+
+[📥 下载文件](https://aiagenttest.oss-cn-beijing.aliyuncs.com/markmap/xxx.html?...)
+
+[👁️ 在线预览](http://page.thingotech.com.cn/page/xxx.html)
+
+📄 文件名：xxx.html
+
+💡 提示：点击链接即可访问思维导图，支持缩放、展开/折叠、导出等交互操作。
+```
+
+### 🎯 使用场景
+
+1. **AI Agent 框架集成** - 总结智能体会保留并显示完整的链接格式
+2. **Markdown 渲染器** - 前端支持 Markdown 时可直接渲染为可点击链接
+3. **纯文本显示** - 即使不渲染 Markdown，链接仍清晰可见
+4. **更好的用户体验** - 用户在第一轮就能看到完整的访问方式
+
+### 🔧 Technical Details
+
+**改进内容**：
+
+1. message 字段从简单文本升级为 Markdown 格式
+2. 包含两个清晰标识的链接：下载链接和预览链接
+3. 添加存储信息标识（双存储 / 仅 OSS）
+4. 添加友好的操作提示
+5. 保留原有的 downloadUrl 和 previewUrl 字段便于程序化访问
+
+---
+
 ## [0.2.10] - 2025-10-17
 
 ### 🐛 Bug Fixes
